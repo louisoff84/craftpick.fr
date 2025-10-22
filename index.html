@@ -1,7 +1,270 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Craftpick Network — Site</title>
+  <meta name="description" content="Site officiel - Craftpick Network" />
+  <style>
+    /* ---------- Reset & base ---------- */
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg1:#0f1724;--bg2:#0b1220;--card:#0f172a;--muted:#9aa4b2;--glass:rgba(255,255,255,0.04);
+      --accent1:#6366f1;--accent2:#ec4899;--success:#10b981
+    }
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef8;min-height:100vh}
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:28px auto;padding:20px}
+
+    /* ---------- Header ---------- */
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:18px;box-shadow:0 6px 24px rgba(0,0,0,0.5)}
+    .brand h1{font-size:18px}
+    .brand p{color:var(--muted);font-size:12px;margin-top:4px}
+    .header-actions{display:flex;gap:8px;align-items:center}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;border:none}
+
+    /* ---------- Grid ---------- */
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:18px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
+
+    /* ---------- Status & stats ---------- */
+    .status-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .stat{flex:1;min-width:140px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02)}
+    .stat .label{font-size:11px;color:var(--muted)}
+    .stat .value{font-weight:700;font-size:18px;margin-top:6px}
+
+    /* ---------- Arena list ---------- */
+    .arenas{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px}
+    .arena{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
+
+    /* ---------- Aside ---------- */
+    aside .shortcut{display:flex;flex-direction:column;gap:8px}
+    .shortcut .box{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);text-align:center}
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace}
+
+    /* ---------- Footer ---------- */
+    footer{margin-top:18px;padding:18px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* ---------- Modal ---------- */
+    .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center}
+    .modal{width:360px;background:linear-gradient(180deg,#071024,#061223);padding:18px;border-radius:12px}
+    .modal.show{display:flex}
+    input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px}
+
+    /* ---------- small ---------- */
+    .small{font-size:12px;color:var(--muted)}
+    .notify{position:fixed;right:20px;bottom:20px;background:#0b1220;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* Responsive */
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.brand h1{font-size:16px}.logo{width:48px;height:48px}}
+  </style>
+</head>
 <body>
-<h1>Welcome to My Website</h1>
-<p>Hosted on GitHub Pages!</p>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">CP</div>
+        <div>
+          <h1>Craftpick Network</h1>
+          <p>Un serveur, une révolution · Mini-jeux 1.8.8</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn" id="btn-copy">Copier l'IP</button>
+        <button class="btn" id="btn-vote">Voter</button>
+        <button class="btn primary" id="btn-login">Se connecter</button>
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <h2 style="font-size:20px">Bienvenue sur Craftpick Network</h2>
+        <p class="small" style="margin-top:8px">IP du serveur : <span class="mono" id="server-ip">craftpick.fr</span></p>
+
+        <div class="status-row" style="margin-top:12px">
+          <div class="stat">
+            <div class="label">Statut</div>
+            <div class="value" id="server-status">Chargement...</div>
+            <div class="small" id="server-motd">—</div>
+          </div>
+
+          <div class="stat">
+            <div class="label">Joueurs</div>
+            <div class="value" id="server-players">0 / 0</div>
+            <div class="small">Rafraîchissement automatique</div>
+          </div>
+
+          <div class="stat">
+            <div class="label">Durée moyenne</div>
+            <div class="value" id="avg-duration">—</div>
+            <div class="small">Arènes actives: <span id="active-arenas">—</span></div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <h3 style="font-size:16px">Arènes populaires</h3>
+          <div class="arenas" id="arena-list">
+            <!-- listes remplies en JS -->
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn" onclick="location.href='/lobby'">Lobby</button>
+          <button class="btn" onclick="location.href='/boutique'">Boutique</button>
+          <button class="btn" onclick="location.href='/recrutement'">Recrutement</button>
+          <button class="btn" id="btn-contact">Contact</button>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="shortcut">
+          <div class="box">
+            <div class="small">IP</div>
+            <div class="mono" style="margin-top:6px">craftpick.fr</div>
+            <button class="btn" style="margin-top:8px;width:100%" id="aside-copy">Copier</button>
+          </div>
+
+          <div class="box" style="text-align:left">
+            <div class="small">Boutique</div>
+            <div class="small" style="margin-top:6px">Grades, cosmétiques</div>
+            <button class="btn" style="margin-top:8px;width:100%" onclick="location.href='/boutique'">Visiter</button>
+          </div>
+
+          <div class="box" style="text-align:left">
+            <div class="small">Vote</div>
+            <div class="small" style="margin-top:6px">Aide le serveur & gagne des récompenses</div>
+            <button class="btn" style="margin-top:8px;width:100%" id="aside-vote">Voter</button>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="small">Stats Globales</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <div class="box" style="flex:1">Parties<br/><strong id="total-games">—</strong></div>
+            <div class="box" style="flex:1">Arènes<br/><strong id="total-arenas">—</strong></div>
+          </div>
+        </div>
+
+      </aside>
+    </main>
+
+    <footer>
+      © <span id="year"></span> Craftpick Network — IP: <span class="mono">craftpick.fr</span> · Version: 1.8.8
+    </footer>
+  </div>
+
+  <!-- Modal login / contact -->
+  <div class="modal-back" id="modal-back">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div id="modal-content">
+        <!-- contenu injecté par JS -->
+      </div>
+    </div>
+  </div>
+
+  <div class="notify" id="notify" style="display:none">Message</div>
+
+  <script>
+    (function(){
+      const serverIP = 'craftpick.fr';
+      const ipEls = document.querySelectorAll('#server-ip');
+      ipEls.forEach(e=>e.textContent = serverIP);
+      document.getElementById('year').textContent = new Date().getFullYear();
+
+      // Mock data (remplacer par fetch vers votre endpoint Minecraft status)
+      function getMockStatus(){
+        const online = Math.random() > 0.05;
+        const players = online ? Math.floor(Math.random()*120) : 0;
+        const max = 200;
+        const motd = '§aCraftpick Network — Mini-jeux 1.8.8';
+        return {online,players,max,motd};
+      }
+
+      function getMockStats(){
+        return {avgDuration: '12m 34s', arenas: 12, totalGames: 18452};
+      }
+
+      // Update UI
+      function updateStatus(){
+        // Si vous avez une API: fetch('/api/status').then(r=>r.json()).then(updateFromAPI)
+        const s = getMockStatus();
+        document.getElementById('server-status').textContent = s.online ? 'En ligne' : 'Hors-ligne';
+        document.getElementById('server-motd').textContent = s.motd;
+        document.getElementById('server-players').textContent = `${s.players} / ${s.max}`;
+      }
+
+      function updateStats(){
+        const st = getMockStats();
+        document.getElementById('avg-duration').textContent = st.avgDuration;
+        document.getElementById('active-arenas').textContent = st.arenas;
+        document.getElementById('total-games').textContent = st.totalGames.toLocaleString('fr-FR');
+        document.getElementById('total-arenas').textContent = st.arenas;
+      }
+
+      // Arena list
+      const arenaExamples = [
+        {name:'Île de fer',mode:'BedWars',players:8},
+        {name:'Forteresse',mode:'BedWars',players:8},
+        {name:'Nautilus',mode:'Duels',players:4},
+        {name:'Cité céleste',mode:'BedWars',players:12}
+      ];
+      function renderArenas(){
+        const wrap = document.getElementById('arena-list');
+        wrap.innerHTML = '';
+        arenaExamples.forEach(a=>{
+          const d = document.createElement('div'); d.className='arena';
+          d.innerHTML = `<div><strong>${a.name}</strong><div class=\"small\">${a.mode} · ${a.players} joueurs</div></div><div><button class=\"btn\">Rejoindre</button></div>`;
+          wrap.appendChild(d);
+        });
+      }
+
+      // copy IP
+      function showNotice(t){const n=document.getElementById('notify');n.textContent=t;n.style.display='block';setTimeout(()=>n.style.display='none',2600)}
+      document.getElementById('btn-copy').addEventListener('click',()=>{navigator.clipboard.writeText(serverIP).then(()=>showNotice('IP copiée !'))});
+      document.getElementById('aside-copy').addEventListener('click',()=>{navigator.clipboard.writeText(serverIP).then(()=>showNotice('IP copiée !'))});
+
+      // Vote / boutique
+      document.getElementById('btn-vote').addEventListener('click',()=>{window.open('/vote','_blank')});
+      document.getElementById('aside-vote').addEventListener('click',()=>{window.open('/vote','_blank')});
+
+      // contact modal
+      const modalBack = document.getElementById('modal-back');
+      function openModal(html){document.getElementById('modal-content').innerHTML=html;modalBack.classList.add('show')}
+      function closeModal(){modalBack.classList.remove('show')}
+      modalBack.addEventListener('click',(e)=>{if(e.target===modalBack)closeModal()});
+
+      document.getElementById('btn-contact').addEventListener('click',()=>{
+        openModal(`<h3 style="font-size:16px">Contact</h3>
+          <p class=\"small\">Envoie-nous un message et nous répondrons sur Discord.</p>
+          <form id=\"contact-form\">\n  <input name=\"name\" placeholder=\"Ton pseudo\" required>\n  <input name=\"email\" placeholder=\"Email (optionnel)\">\n  <textarea name=\"msg\" placeholder=\"Message...\" rows=4 required></textarea>\n  <div style=\"display:flex;gap:8px;margin-top:10px\">\n    <button type=\"submit\" class=\"btn primary\">Envoyer</button>\n    <button type=\"button\" class=\"btn\" id=\"cancel-contact\">Annuler</button>\n  </div>\n</form>`);
+        document.getElementById('cancel-contact').addEventListener('click',closeModal);
+        document.getElementById('contact-form').addEventListener('submit',function(e){e.preventDefault();closeModal();showNotice('Message envoyé — simulation');});
+      });
+
+      // login modal
+      document.getElementById('btn-login').addEventListener('click',()=>{
+        openModal(`<h3 style=\"font-size:16px\">Se connecter (simulation)</h3>
+          <form id=\"login-form\">\n  <input name=\"user\" placeholder=\"Pseudo\" required>\n  <input name=\"pass\" type=\"password\" placeholder=\"Mot de passe\" required>\n  <div style=\"display:flex;gap:8px;margin-top:10px\">\n    <button type=\"submit\" class=\"btn primary\">Se connecter</button>\n    <button type=\"button\" class=\"btn\" id=\"cancel-login\">Annuler</button>\n  </div>\n</form>`);
+        document.getElementById('cancel-login').addEventListener('click',closeModal);
+        document.getElementById('login-form').addEventListener('submit',function(e){e.preventDefault();closeModal();showNotice('Connecté — simulation');});
+      });
+
+      // initial render
+      renderArenas(); updateStatus(); updateStats();
+
+      // polling
+      setInterval(updateStatus,7000);
+      setInterval(updateStats,15000);
+
+      // helpful tip: replace getMockStatus/getMockStats with fetch() to your real API endpoints.
+      // Exemple (backend must renvoyer JSON):
+      // fetch('/api/status').then(r=>r.json()).then(data=>{ document.getElementById('server-status').textContent = data.online? 'En ligne': 'Hors-ligne'; ... })
+
+    })();
+  </script>
 </body>
 </html>
