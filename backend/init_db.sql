@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  username TEXT UNIQUE NOT NULL,
+  email TEXT,
+  pass_hash TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS stats (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  key TEXT UNIQUE,
+  value TEXT
+);
+
+INSERT OR IGNORE INTO stats(key,value) VALUES ('totalGames','0');
+INSERT OR IGNORE INTO stats(key,value) VALUES ('arenas','12');
+INSERT OR IGNORE INTO stats(key,value) VALUES ('avgDuration','12m 34s');
