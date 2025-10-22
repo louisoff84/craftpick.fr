@@ -308,13 +308,13 @@ function renderLogged(){
 // click handlers that redirect to login page if not logged
 function guardOrRedirect(target){
   if(localStorage.getItem('cp_user')) { showNotify('Redirection vers ' + target + ' — simulation'); /* open real page when implemented */ }
-  else window.location.href = "${loginPage}";
+  else window.location.href = "login-register.html";
 }
 
 // initial click handlers
-function handleConnect(){ if(API_BASE) showLogin(); else window.location.href = "${loginPage}"; }
+function handleConnect(){ if(API_BASE) showLogin(); else window.location.href = "login-register.html"; }
 el('btnConnect').addEventListener('click', handleConnect);
-el('goLogin').addEventListener('click', ()=> window.location.href = "${loginPage}");
+el('goLogin').addEventListener('click', ()=> window.location.href = "login-register.html");
 el('copyIP').addEventListener('click', ()=> { navigator.clipboard.writeText('craftpick.fr'); showNotify('IP copiée !'); });
 
 // menu buttons -> redirect to login page if not logged, otherwise simulate
