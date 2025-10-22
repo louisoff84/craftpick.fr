@@ -1,78 +1,528 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Connexion / Inscription - Craftpick Network</title>
-<style>
-  body {margin:0;padding:0;font-family:Inter,Arial,sans-serif;background:linear-gradient(160deg,#0f1724,#0b1220);color:#e6eef8;display:flex;align-items:center;justify-content:center;height:100vh;}
-  .container {background:rgba(255,255,255,0.05);padding:30px;border-radius:12px;width:360px;box-shadow:0 0 20px rgba(0,0,0,0.5);}
-  h1 {text-align:center;margin-bottom:20px;background:linear-gradient(90deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  form {display:flex;flex-direction:column;gap:12px;}
-  input {padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:#e6eef8;}
-  button {padding:10px;border:none;border-radius:8px;background:linear-gradient(90deg,#6366f1,#ec4899);color:white;font-weight:600;cursor:pointer;transition:transform .2s ease;}
-  button:hover {transform:scale(1.05);}
-  .switch {text-align:center;margin-top:10px;color:#9aa4b2;cursor:pointer;font-size:14px;}
-  .notify {position:fixed;bottom:20px;right:20px;background:#081022;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:none;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - Craftpick Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .auth-container {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 0.3rem;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 0.8rem;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+        }
+
+        .form-container {
+            display: none;
+        }
+
+        .form-container.active {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-link a {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .back-link a:hover {
+            opacity: 0.8;
+        }
+
+        .error-message {
+            background: rgba(255, 107, 107, 0.3);
+            border-left: 4px solid #ff6b6b;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(76, 175, 80, 0.3);
+            border-left: 4px solid #4CAF50;
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .password-strength {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s;
+        }
+
+        .strength-weak {
+            background: #ff6b6b;
+            width: 33%;
+        }
+
+        .strength-medium {
+            background: #ffd700;
+            width: 66%;
+        }
+
+        .strength-strong {
+            background: #4CAF50;
+            width: 100%;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            animation: slideInRight 0.3s;
+            max-width: 350px;
+        }
+
+        .notification.success {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ff6b6b;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 2rem 1.5rem;
+            }
+
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="auth-container">
+        <div class="logo">
+            <h1>⛏️ CRAFTPICK NETWORK</h1>
+            <p>Version 1.8.8 - craftpick.fr</p>
+        </div>
 
-<div class="container" id="formContainer">
-  <h1>Connexion</h1>
-  <form id="loginForm">
-    <input type="text" name="user" placeholder="Pseudo" required>
-    <input type="password" name="pass" placeholder="Mot de passe" required>
-    <button type="submit">Se connecter</button>
-  </form>
-  <div class="switch" id="toRegister">Pas encore inscrit ? Crée un compte</div>
-</div>
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')">Connexion</div>
+            <div class="tab" onclick="switchTab('register')">Inscription</div>
+        </div>
 
-<div class="notify" id="notify">Message</div>
+        <!-- Formulaire de Connexion -->
+        <div id="loginForm" class="form-container active">
+            <div id="loginError" class="error-message"></div>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginUsername">Pseudo</label>
+                    <input type="text" id="loginUsername" placeholder="Votre pseudo Minecraft" required>
+                </div>
 
-<script>
-const formContainer = document.getElementById('formContainer');
-const notify = document.getElementById('notify');
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" placeholder="Votre mot de passe" required>
+                </div>
 
-// Fonction notification
-function showNotify(msg){ notify.textContent = msg; notify.style.display='block'; setTimeout(()=>notify.style.display='none',2400); }
+                <button type="submit" class="btn-submit">🎮 Se Connecter</button>
+            </form>
+        </div>
 
-// Afficher formulaire inscription
-document.getElementById('toRegister').addEventListener('click',()=>{
-  formContainer.innerHTML=`
-    <h1>Inscription</h1>
-    <form id="registerForm">
-      <input type="text" name="user" placeholder="Pseudo" required>
-      <input type="email" name="email" placeholder="Email (optionnel)">
-      <input type="password" name="pass" placeholder="Mot de passe" required>
-      <input type="password" name="pass2" placeholder="Confirme le mot de passe" required>
-      <button type="submit">Créer un compte</button>
-    </form>
-    <div class="switch" id="toLogin">Déjà inscrit ? Connexion</div>
-  `;
+        <!-- Formulaire d'Inscription -->
+        <div id="registerForm" class="form-container">
+            <div id="registerError" class="error-message"></div>
+            <div id="registerSuccess" class="success-message"></div>
+            
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerUsername">Pseudo</label>
+                    <input type="text" id="registerUsername" placeholder="Votre pseudo Minecraft" required minlength="3" maxlength="16">
+                </div>
 
-  document.getElementById('toLogin').addEventListener('click',()=>{ location.reload(); });
+                <div class="form-group">
+                    <label for="registerEmail">Email (optionnel)</label>
+                    <input type="email" id="registerEmail" placeholder="votre@email.com">
+                </div>
 
-  // Gestion inscription simulée
-  document.getElementById('registerForm').addEventListener('submit', e=>{
-    e.preventDefault();
-    const f = new FormData(e.target);
-    if(f.get('pass') !== f.get('pass2')){ showNotify('Les mots de passe ne correspondent pas'); return; }
-    localStorage.setItem('cp_user', f.get('user'));
-    showNotify('Compte créé ! Redirection...');
-    setTimeout(()=>{ window.location.href = "index.html"; },1200);
-  });
-});
+                <div class="form-group">
+                    <label for="registerPassword">Mot de passe</label>
+                    <input type="password" id="registerPassword" placeholder="Minimum 6 caractères" required minlength="6" oninput="checkPasswordStrength()">
+                    <div class="password-strength">
+                        <div id="strengthBar" class="password-strength-bar"></div>
+                    </div>
+                </div>
 
-// Gestion login simulé
-document.getElementById('loginForm').addEventListener('submit', e=>{
-  e.preventDefault();
-  const f = new FormData(e.target);
-  localStorage.setItem('cp_user', f.get('user'));
-  showNotify('Connecté ! Redirection...');
-  setTimeout(()=>{ window.location.href = "index.html"; },1200);
-});
-</script>
+                <div class="form-group">
+                    <label for="registerPasswordConfirm">Confirmer le mot de passe</label>
+                    <input type="password" id="registerPasswordConfirm" placeholder="Répétez votre mot de passe" required>
+                </div>
 
+                <button type="submit" class="btn-submit">✨ Créer un compte</button>
+            </form>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← Retour à l'accueil</a>
+        </div>
+    </div>
+
+    <script>
+        // Changement d'onglet
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab');
+            const forms = document.querySelectorAll('.form-container');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            forms.forEach(f => f.classList.remove('active'));
+
+            if (tab === 'login') {
+                tabs[0].classList.add('active');
+                document.getElementById('loginForm').classList.add('active');
+            } else {
+                tabs[1].classList.add('active');
+                document.getElementById('registerForm').classList.add('active');
+            }
+
+            // Réinitialiser les messages d'erreur
+            hideError('loginError');
+            hideError('registerError');
+            hideError('registerSuccess');
+        }
+
+        // Vérification force du mot de passe
+        function checkPasswordStrength() {
+            const password = document.getElementById('registerPassword').value;
+            const strengthBar = document.getElementById('strengthBar');
+
+            let strength = 0;
+            if (password.length >= 6) strength++;
+            if (password.length >= 10) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            strengthBar.className = 'password-strength-bar';
+            if (strength <= 2) {
+                strengthBar.classList.add('strength-weak');
+            } else if (strength <= 4) {
+                strengthBar.classList.add('strength-medium');
+            } else {
+                strengthBar.classList.add('strength-strong');
+            }
+        }
+
+        // Afficher message d'erreur
+        function showError(elementId, message) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        // Masquer message d'erreur
+        function hideError(elementId) {
+            const errorDiv = document.getElementById(elementId);
+            errorDiv.style.display = 'none';
+        }
+
+        // Afficher notification
+        function showNotification(message, type = 'info') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
+
+        // Gestion de la connexion
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // Validation
+            if (username.length < 3) {
+                showError('loginError', 'Le pseudo doit contenir au moins 3 caractères');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('loginError', 'Le mot de passe doit contenir au moins 6 caractères');
+                return;
+            }
+
+            // Vérifier si l'utilisateur existe (simulation)
+            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
+            
+            if (!users[username]) {
+                showError('loginError', 'Ce pseudo n\'existe pas. Veuillez vous inscrire.');
+                return;
+            }
+
+            if (users[username].password !== password) {
+                showError('loginError', 'Mot de passe incorrect');
+                return;
+            }
+
+            // Connexion réussie
+            const userData = {
+                pseudo: username,
+                email: users[username].email || '',
+                loginDate: new Date().toISOString()
+            };
+
+            localStorage.setItem('craftpickUser', JSON.stringify(userData));
+            showNotification('Connexion réussie ! Redirection...', 'success');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // Gestion de l'inscription
+        function handleRegister(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+
+            // Validation du pseudo
+            if (username.length < 3 || username.length > 16) {
+                showError('registerError', 'Le pseudo doit contenir entre 3 et 16 caractères');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showError('registerError', 'Le pseudo ne peut contenir que des lettres, chiffres et underscores');
+                return;
+            }
+
+            // Validation du mot de passe
+            if (password.length < 6) {
+                showError('registerError', 'Le mot de passe doit contenir au moins 6 caractères');
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                showError('registerError', 'Les mots de passe ne correspondent pas');
+                return;
+            }
+
+            // Vérifier si le pseudo existe déjà
+            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
+            
+            if (users[username]) {
+                showError('registerError', 'Ce pseudo est déjà utilisé');
+                return;
+            }
+
+            // Enregistrer l'utilisateur
+            users[username] = {
+                password: password,
+                email: email,
+                registerDate: new Date().toISOString()
+            };
+
+            localStorage.setItem('craftpickUsers', JSON.stringify(users));
+
+            // Connexion automatique
+            const userData = {
+                pseudo: username,
+                email: email,
+                loginDate: new Date().toISOString()
+            };
+
+            localStorage.setItem('craftpickUser', JSON.stringify(userData));
+
+            hideError('registerError');
+            showNotification('Inscription réussie ! Bienvenue sur Craftpick Network ! 🎉', 'success');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Si déjà connecté, rediriger vers l'accueil
+            if (localStorage.getItem('craftpickUser')) {
+                showNotification('Vous êtes déjà connecté !', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        });
+    </script>
 </body>
 </html>
