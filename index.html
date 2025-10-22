@@ -167,6 +167,12 @@
             color: #ffd700;
         }
 
+        .api-status {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
         /* Sections */
         .container {
             max-width: 1400px;
@@ -248,6 +254,41 @@
             opacity: 0.7;
         }
 
+        /* Leaderboard */
+        .leaderboard-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            width: 50px;
+        }
+
+        .player-name {
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .player-score {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
         /* Shop Items */
         .shop-item {
             background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(238, 90, 111, 0.3));
@@ -285,34 +326,6 @@
             background: #45a049;
         }
 
-        /* Leaderboard */
-        .leaderboard-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 0.8rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .rank {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ffd700;
-            width: 50px;
-        }
-
-        .player-name {
-            flex: 1;
-            font-weight: bold;
-        }
-
-        .player-score {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-
         /* Notifications */
         .notification {
             position: fixed;
@@ -339,12 +352,9 @@
             border-left: 4px solid #2196F3;
         }
 
-        /* User Profile */
-        .user-profile {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 1rem;
-            border-radius: 10px;
-            display: inline-block;
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
         }
 
         /* Animations */
@@ -377,6 +387,19 @@
             }
         }
 
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -403,19 +426,18 @@
     <nav>
         <div class="logo">⛏️ CRAFTPICK NETWORK</div>
         <div class="nav-links">
-            <a href="#" onclick="navigateOrLogin('lobby')">Lobby</a>
             <a href="#minijeux">Mini-Jeux</a>
             <a href="#boutique">Boutique</a>
             <a href="#classement">Classement</a>
-            <button class="btn-secondary" onclick="navigateOrLogin('vote')">🗳️ Voter</button>
-            <button class="btn-primary" id="authBtn" onclick="handleAuth()">Se Connecter</button>
+            <button class="btn-secondary" onclick="showNotification('Votez pour nous sur les sites de vote !', 'info')">🗳️ Voter</button>
+            <a href="https://discord.gg/craftpick" target="_blank" class="btn-primary">Discord</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <div class="hero">
         <h1>Bienvenue sur Craftpick Network</h1>
-        <p>Le meilleur serveur Minecraft 1.8.8 pour tous vos mini-jeux préférés !</p>
+        <p>Le meilleur serveur Minecraft 1.8.8 - BedWars & SpeedBridge !</p>
         
         <div class="server-ip">
             <h3>🎮 Rejoignez-nous maintenant !</h3>
@@ -426,14 +448,10 @@
         </div>
 
         <div class="server-status">
-            <div id="statusIndicator" class="status-online">● Serveur en ligne</div>
-            <div class="player-count" id="playerCount">127 / 500 joueurs</div>
-            <div id="motd">Bienvenue sur Craftpick Network ! 🎉</div>
-        </div>
-
-        <div id="userProfile" style="display: none;" class="user-profile">
-            <span id="welcomeMsg"></span>
-            <button onclick="logout()" style="margin-left: 1rem; background: #ff6b6b; border: none; padding: 0.5rem 1rem; border-radius: 5px; color: white; cursor: pointer;">Déconnexion</button>
+            <div id="statusIndicator" class="status-online pulse">⏳ Connexion à l'API...</div>
+            <div class="player-count" id="playerCount">- / - joueurs</div>
+            <div id="motd">Chargement...</div>
+            <div class="api-status" id="apiStatus">API: Initialisation...</div>
         </div>
     </div>
 
@@ -443,64 +461,58 @@
         <div class="section" id="minijeux">
             <h2>🎯 Mini-Jeux Disponibles</h2>
             <div class="grid">
-                <div class="card" onclick="navigateOrLogin('bedwars')">
+                <div class="card">
                     <h3>🛏️ BedWars</h3>
-                    <p>Protégez votre lit et détruisez ceux des adversaires !</p>
+                    <p>Protégez votre lit et détruisez ceux des adversaires ! Plugin BedWars1058</p>
                     <div class="card-stats">
                         <div class="stat">
-                            <div class="stat-value" id="bedwarsPlayers">42</div>
+                            <div class="stat-value" id="bedwarsPlayers">-</div>
                             <div class="stat-label">Joueurs</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value" id="bedwarsArenas">8</div>
-                            <div class="stat-label">Arènes</div>
+                            <div class="stat-value" id="bedwarsGames">-</div>
+                            <div class="stat-label">Parties</div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card" onclick="navigateOrLogin('duels')">
-                    <h3>⚔️ Duels</h3>
-                    <p>Affrontez vos adversaires en combat singulier !</p>
+                <div class="card">
+                    <h3>🌉 SpeedBridge</h3>
+                    <p>Testez votre vitesse de bridging et battez les records !</p>
                     <div class="card-stats">
                         <div class="stat">
-                            <div class="stat-value" id="duelsPlayers">28</div>
+                            <div class="stat-value" id="speedbridgePlayers">-</div>
                             <div class="stat-label">Joueurs</div>
                         </div>
                         <div class="stat">
-                            <div class="stat-value" id="duelsArenas">12</div>
-                            <div class="stat-label">Arènes</div>
+                            <div class="stat-value" id="speedbridgeRecord">-</div>
+                            <div class="stat-label">Record</div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div class="card" onclick="navigateOrLogin('skywars')">
-                    <h3>☁️ SkyWars</h3>
-                    <p>Survivez sur les îles flottantes et soyez le dernier debout !</p>
-                    <div class="card-stats">
-                        <div class="stat">
-                            <div class="stat-value" id="skywarsPlayers">36</div>
-                            <div class="stat-label">Joueurs</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value" id="skywarsArenas">6</div>
-                            <div class="stat-label">Arènes</div>
-                        </div>
-                    </div>
+        <!-- Classement BedWars -->
+        <div class="section" id="classement">
+            <h2>🏆 Classement BedWars</h2>
+            <div id="bedwarsLeaderboard">
+                <div class="leaderboard-item">
+                    <span class="rank">-</span>
+                    <span class="player-name">Chargement...</span>
+                    <span class="player-score">-</span>
                 </div>
+            </div>
+        </div>
 
-                <div class="card" onclick="navigateOrLogin('uhc')">
-                    <h3>🏆 UHC</h3>
-                    <p>Ultra Hardcore - Le dernier survivant gagne !</p>
-                    <div class="card-stats">
-                        <div class="stat">
-                            <div class="stat-value" id="uhcPlayers">21</div>
-                            <div class="stat-label">Joueurs</div>
-                        </div>
-                        <div class="stat">
-                            <div class="stat-value" id="uhcArenas">3</div>
-                            <div class="stat-label">Arènes</div>
-                        </div>
-                    </div>
+        <!-- Classement SpeedBridge -->
+        <div class="section">
+            <h2>⚡ Records SpeedBridge</h2>
+            <div id="speedbridgeLeaderboard">
+                <div class="leaderboard-item">
+                    <span class="rank">-</span>
+                    <span class="player-name">Chargement...</span>
+                    <span class="player-score">-</span>
                 </div>
             </div>
         </div>
@@ -513,74 +525,28 @@
                     <h3>⭐ Grade VIP</h3>
                     <p>Accès à des avantages exclusifs et cosmétiques premium</p>
                     <div class="shop-price">9.99€</div>
-                    <button class="buy-btn" onclick="navigateOrLogin('buy-vip')">Acheter</button>
+                    <button class="buy-btn" onclick="showNotification('Boutique disponible sur craftpick.fr/shop', 'info')">Acheter</button>
                 </div>
 
                 <div class="shop-item">
                     <h3>💎 Grade VIP+</h3>
                     <p>Tous les avantages VIP + bonus et priorité de connexion</p>
                     <div class="shop-price">19.99€</div>
-                    <button class="buy-btn" onclick="navigateOrLogin('buy-vip-plus')">Acheter</button>
+                    <button class="buy-btn" onclick="showNotification('Boutique disponible sur craftpick.fr/shop', 'info')">Acheter</button>
                 </div>
 
                 <div class="shop-item">
                     <h3>👑 Grade MVP</h3>
                     <p>Le grade ultime avec tous les avantages possibles</p>
                     <div class="shop-price">34.99€</div>
-                    <button class="buy-btn" onclick="navigateOrLogin('buy-mvp')">Acheter</button>
+                    <button class="buy-btn" onclick="showNotification('Boutique disponible sur craftpick.fr/shop', 'info')">Acheter</button>
                 </div>
 
                 <div class="shop-item">
                     <h3>🎨 Pack Cosmétiques</h3>
                     <p>Collection exclusive de skins, particules et effets</p>
                     <div class="shop-price">7.99€</div>
-                    <button class="buy-btn" onclick="navigateOrLogin('buy-cosmetics')">Acheter</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Classement Section -->
-        <div class="section" id="classement">
-            <h2>🏆 Classement Global</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                <div>
-                    <h3 style="color: #ffd700; margin-bottom: 1rem;">Top Joueurs</h3>
-                    <div class="leaderboard-item">
-                        <span class="rank">1</span>
-                        <span class="player-name">Notch_Gaming</span>
-                        <span class="player-score">12,450 pts</span>
-                    </div>
-                    <div class="leaderboard-item">
-                        <span class="rank">2</span>
-                        <span class="player-name">Dream_Pro</span>
-                        <span class="player-score">11,230 pts</span>
-                    </div>
-                    <div class="leaderboard-item">
-                        <span class="rank">3</span>
-                        <span class="player-name">TechnoBlade99</span>
-                        <span class="player-score">10,890 pts</span>
-                    </div>
-                    <div class="leaderboard-item">
-                        <span class="rank">4</span>
-                        <span class="player-name">MinecraftKing</span>
-                        <span class="player-score">9,560 pts</span>
-                    </div>
-                    <div class="leaderboard-item">
-                        <span class="rank">5</span>
-                        <span class="player-name">BuildMaster2024</span>
-                        <span class="player-score">8,770 pts</span>
-                    </div>
-                </div>
-
-                <div>
-                    <h3 style="color: #ffd700; margin-bottom: 1rem;">Statistiques Globales</h3>
-                    <div class="card">
-                        <h3>📊 Stats du Serveur</h3>
-                        <p><strong>Parties jouées aujourd'hui :</strong> <span id="gamesToday">1,247</span></p>
-                        <p><strong>Total arènes actives :</strong> <span id="totalArenas">29</span></p>
-                        <p><strong>Durée moyenne partie :</strong> <span id="avgDuration">12m 34s</span></p>
-                        <p><strong>Joueurs inscrits :</strong> 45,678</p>
-                    </div>
+                    <button class="buy-btn" onclick="showNotification('Boutique disponible sur craftpick.fr/shop', 'info')">Acheter</button>
                 </div>
             </div>
         </div>
@@ -589,82 +555,39 @@
         <div class="section">
             <h2>📞 Contact & Recrutement</h2>
             <div class="grid">
-                <div class="card" onclick="navigateOrLogin('recruitment')">
+                <div class="card" onclick="showNotification('Postulez sur notre Discord !', 'info')">
                     <h3>💼 Recrutement Staff</h3>
                     <p>Rejoignez notre équipe de modérateurs et administrateurs !</p>
                 </div>
-                <div class="card" onclick="navigateOrLogin('support')">
+                <div class="card" onclick="showNotification('Support disponible sur Discord 24/7', 'info')">
                     <h3>🛟 Support</h3>
                     <p>Besoin d'aide ? Contactez notre équipe de support 24/7</p>
                 </div>
-                <div class="card" onclick="navigateOrLogin('discord')">
+                <div class="card" onclick="window.open('https://discord.gg/craftpick', '_blank')">
                     <h3>💬 Discord</h3>
-                    <p>Rejoignez notre communauté Discord avec plus de 10,000 membres</p>
+                    <p>Rejoignez notre communauté Discord</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Variables globales pour simulation
-        let playerCount = 127;
-        let maxPlayers = 500;
-        let isOnline = true;
-
-        // Stats pour mini-jeux
-        let gameStats = {
-            bedwars: { players: 42, arenas: 8 },
-            duels: { players: 28, arenas: 12 },
-            skywars: { players: 36, arenas: 6 },
-            uhc: { players: 21, arenas: 3 }
+        // Configuration API
+        const API_CONFIG = {
+            // URL de votre API BedWars1058 
+            // Remplacez par votre vraie URL d'API
+            bedwarsAPI: 'http://votreserveur.fr:8080/api/bedwars',
+            speedbridgeAPI: 'http://votreserveur.fr:8080/api/speedbridge',
+            serverAPI: 'http://votreserveur.fr:8080/api/status'
         };
 
-        let globalStats = {
-            gamesToday: 1247,
-            totalArenas: 29,
-            avgDuration: '12m 34s'
-        };
-
-        // Vérifier si utilisateur connecté
-        function isUserLoggedIn() {
-            return localStorage.getItem('craftpickUser') !== null;
-        }
-
-        // Navigation avec vérification connexion
-        function navigateOrLogin(destination) {
-            if (!isUserLoggedIn()) {
-                showNotification('Vous devez être connecté pour accéder à cette fonctionnalité', 'error');
-                setTimeout(() => {
-                    window.location.href = 'login-register.html';
-                }, 1500);
-            } else {
-                showNotification(`Accès à ${destination} en cours...`, 'success');
-            }
-        }
-
-        // Gestion authentification
-        function handleAuth() {
-            if (isUserLoggedIn()) {
-                // Si connecté, afficher profil
-                const user = JSON.parse(localStorage.getItem('craftpickUser'));
-                showNotification(`Bonjour ${user.pseudo} !`, 'success');
-            } else {
-                window.location.href = 'login-register.html';
-            }
-        }
+        let updateInterval;
 
         // Copier IP
         function copyIP() {
             navigator.clipboard.writeText('craftpick.fr').then(() => {
                 showNotification('IP copiée dans le presse-papiers ! 🎉', 'success');
             });
-        }
-
-        // Déconnexion
-        function logout() {
-            localStorage.removeItem('craftpickUser');
-            showNotification('Déconnexion réussie !', 'success');
-            updateUI();
         }
 
         // Afficher notifications
@@ -679,49 +602,146 @@
             }, 3000);
         }
 
-        // Mise à jour de l'interface utilisateur
-        function updateUI() {
-            const authBtn = document.getElementById('authBtn');
-            const userProfile = document.getElementById('userProfile');
-            const welcomeMsg = document.getElementById('welcomeMsg');
+        // Récupérer les données du serveur
+        async function fetchServerStatus() {
+            try {
+                // Tentative de récupération du statut du serveur
+                const response = await fetch(API_CONFIG.serverAPI);
+                const data = await response.json();
 
-            if (isUserLoggedIn()) {
-                const user = JSON.parse(localStorage.getItem('craftpickUser'));
-                authBtn.textContent = '👤 Profil';
-                userProfile.style.display = 'inline-block';
-                welcomeMsg.textContent = `Bienvenue, ${user.pseudo} ! 🎮`;
-            } else {
-                authBtn.textContent = 'Se Connecter';
-                userProfile.style.display = 'none';
+                document.getElementById('statusIndicator').className = 'status-online';
+                document.getElementById('statusIndicator').textContent = '● Serveur en ligne';
+                document.getElementById('playerCount').textContent = `${data.players.online} / ${data.players.max} joueurs`;
+                document.getElementById('motd').textContent = data.motd || 'Bienvenue sur Craftpick Network ! 🎉';
+                document.getElementById('apiStatus').textContent = 'API: Connectée ✓';
+            } catch (error) {
+                // Mode simulation si l'API n'est pas disponible
+                useFallbackData();
             }
         }
 
-        // Simulation statut serveur
-        function updateServerStatus() {
-            // Variation aléatoire du nombre de joueurs
-            const change = Math.floor(Math.random() * 11) - 5;
-            playerCount = Math.max(50, Math.min(maxPlayers, playerCount + change));
-            
-            document.getElementById('playerCount').textContent = `${playerCount} / ${maxPlayers} joueurs`;
+        // Récupérer les stats BedWars
+        async function fetchBedWarsStats() {
+            try {
+                const response = await fetch(API_CONFIG.bedwarsAPI + '/stats');
+                const data = await response.json();
 
-            // Mise à jour stats mini-jeux
-            for (let game in gameStats) {
-                const playerChange = Math.floor(Math.random() * 7) - 3;
-                gameStats[game].players = Math.max(5, gameStats[game].players + playerChange);
-                document.getElementById(`${game}Players`).textContent = gameStats[game].players;
+                document.getElementById('bedwarsPlayers').textContent = data.playersOnline || 0;
+                document.getElementById('bedwarsGames').textContent = data.gamesActive || 0;
+
+                // Mise à jour du classement
+                updateBedWarsLeaderboard(data.leaderboard || []);
+            } catch (error) {
+                console.log('API BedWars non disponible, utilisation de données simulées');
+            }
+        }
+
+        // Récupérer les stats SpeedBridge
+        async function fetchSpeedBridgeStats() {
+            try {
+                const response = await fetch(API_CONFIG.speedbridgeAPI + '/stats');
+                const data = await response.json();
+
+                document.getElementById('speedbridgePlayers').textContent = data.playersOnline || 0;
+                document.getElementById('speedbridgeRecord').textContent = data.worldRecord || '-';
+
+                // Mise à jour du classement
+                updateSpeedBridgeLeaderboard(data.leaderboard || []);
+            } catch (error) {
+                console.log('API SpeedBridge non disponible, utilisation de données simulées');
+            }
+        }
+
+        // Mise à jour du classement BedWars
+        function updateBedWarsLeaderboard(data) {
+            const container = document.getElementById('bedwarsLeaderboard');
+            
+            if (data.length === 0) {
+                // Données simulées
+                data = [
+                    { rank: 1, player: 'Pro_Player_123', kills: 2450 },
+                    { rank: 2, player: 'BedWars_King', kills: 2130 },
+                    { rank: 3, player: 'Dream_Killer', kills: 1890 },
+                    { rank: 4, player: 'TechnoBlade', kills: 1560 },
+                    { rank: 5, player: 'Clutch_Master', kills: 1320 }
+                ];
             }
 
-            // Mise à jour stats globales
-            globalStats.gamesToday += Math.floor(Math.random() * 5);
-            document.getElementById('gamesToday').textContent = globalStats.gamesToday.toLocaleString();
+            container.innerHTML = data.map(item => `
+                <div class="leaderboard-item">
+                    <span class="rank">${item.rank}</span>
+                    <span class="player-name">${item.player}</span>
+                    <span class="player-score">${item.kills} kills</span>
+                </div>
+            `).join('');
+        }
+
+        // Mise à jour du classement SpeedBridge
+        function updateSpeedBridgeLeaderboard(data) {
+            const container = document.getElementById('speedbridgeLeaderboard');
+            
+            if (data.length === 0) {
+                // Données simulées
+                data = [
+                    { rank: 1, player: 'SpeedGod_Pro', time: '1.23s' },
+                    { rank: 2, player: 'FastBridger', time: '1.45s' },
+                    { rank: 3, player: 'Lightning_Hands', time: '1.67s' },
+                    { rank: 4, player: 'Bridge_Master', time: '1.89s' },
+                    { rank: 5, player: 'QuickBlocks', time: '2.01s' }
+                ];
+            }
+
+            container.innerHTML = data.map(item => `
+                <div class="leaderboard-item">
+                    <span class="rank">${item.rank}</span>
+                    <span class="player-name">${item.player}</span>
+                    <span class="player-score">${item.time}</span>
+                </div>
+            `).join('');
+        }
+
+        // Données de secours si API non disponible
+        function useFallbackData() {
+            document.getElementById('statusIndicator').className = 'status-online';
+            document.getElementById('statusIndicator').textContent = '● Serveur en ligne (Mode démo)';
+            document.getElementById('playerCount').textContent = `${Math.floor(Math.random() * 50 + 50)} / 500 joueurs`;
+            document.getElementById('motd').textContent = 'Bienvenue sur Craftpick Network ! 🎉';
+            document.getElementById('apiStatus').textContent = 'API: Mode démo (configurez votre API)';
+
+            // Stats simulées
+            document.getElementById('bedwarsPlayers').textContent = Math.floor(Math.random() * 30 + 20);
+            document.getElementById('bedwarsGames').textContent = Math.floor(Math.random() * 8 + 3);
+            document.getElementById('speedbridgePlayers').textContent = Math.floor(Math.random() * 15 + 5);
+            document.getElementById('speedbridgeRecord').textContent = '1.23s';
+
+            // Classements simulés
+            updateBedWarsLeaderboard([]);
+            updateSpeedBridgeLeaderboard([]);
+        }
+
+        // Mise à jour globale
+        async function updateAllData() {
+            await fetchServerStatus();
+            await fetchBedWarsStats();
+            await fetchSpeedBridgeStats();
         }
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', () => {
-            updateUI();
-            
-            // Mise à jour périodique (toutes les 10 secondes)
-            setInterval(updateServerStatus, 10000);
+            // Première mise à jour
+            updateAllData();
+
+            // Mise à jour automatique toutes les 10 secondes
+            updateInterval = setInterval(updateAllData, 10000);
+
+            showNotification('Bienvenue sur Craftpick Network ! 🎮', 'success');
+        });
+
+        // Nettoyage à la fermeture
+        window.addEventListener('beforeunload', () => {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+            }
         });
     </script>
 </body>
