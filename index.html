@@ -1,336 +1,728 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Craftpick Network — Site complet</title>
-<style>
-/* ---------- Reset & base ---------- */
-*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif}
-:root{
-  --bg1:#071024;--bg2:#061223;--muted:#9aa4b2;--glass:rgba(255,255,255,0.03);
-  --accent1:#6366f1;--accent2:#ec4899;--success:#10b981
-}
-body{background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef8;min-height:100vh}
-.container{max-width:1100px;margin:28px auto;padding:18px}
-/* header */
-.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:18px}
-.brand h1{font-size:18px}
-.brand p{color:var(--muted);font-size:12px}
-/* nav */
-nav{display:flex;gap:12px;align-items:center}
-.link{padding:8px 12px;border-radius:10px;background:var(--glass);cursor:pointer}
-.btn-primary{padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;color:white;cursor:pointer}
-/* layout */
-.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:18px}
-.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02)}
-.stat-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-.stat{flex:1;min-width:140px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02)}
-.small{font-size:13px;color:var(--muted)}
-.arenas{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px}
-.arena{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
-/* modal */
-.modal {position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6)}
-.modal .box{width:420px;background:#071225;padding:18px;border-radius:12px}
-.modal.show{display:flex}
-/* forms */
-input,textarea,select{width:100%;padding:10px;margin-top:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:inherit}
-button{cursor:pointer}
-.notify{position:fixed;right:20px;bottom:20px;background:#081022;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:none}
-/* responsive */
-@media(max-width:900px){.grid{grid-template-columns:1fr}.logo{width:48px;height:48px}}
-/* small helpers */
-.row{display:flex;gap:10px;align-items:center}
-.center{display:flex;align-items:center;justify-content:center}
-.mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace}
-.section-title{font-size:18px;margin-bottom:8px}
-.hidden{display:none}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Craftpick Network - Serveur Minecraft 1.8.8</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a, .nav-links button {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .nav-links a:hover, .nav-links button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f) !important;
+            padding: 0.7rem 1.5rem !important;
+            font-weight: bold;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #4CAF50, #45a049) !important;
+            padding: 0.7rem 1.5rem !important;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            animation: fadeIn 1s;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .server-ip {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1.5rem;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 2rem 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .server-ip h3 {
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .ip-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .ip-text {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .copy-btn {
+            background: #4CAF50;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .copy-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        /* Server Status */
+        .server-status {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem auto;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-online {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .status-offline {
+            color: #ff6b6b;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .player-count {
+            font-size: 2rem;
+            margin: 1rem 0;
+            color: #ffd700;
+        }
+
+        /* Sections */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            animation: slideUp 0.5s;
+        }
+
+        .section h2 {
+            color: #ffd700;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: #ffd700;
+        }
+
+        .card h3 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .card p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .card-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Shop Items */
+        .shop-item {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.3), rgba(238, 90, 111, 0.3));
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .shop-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(255, 107, 107, 0.4);
+        }
+
+        .shop-price {
+            font-size: 1.8rem;
+            color: #ffd700;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .buy-btn {
+            background: #4CAF50;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .buy-btn:hover {
+            background: #45a049;
+        }
+
+        /* Leaderboard */
+        .leaderboard-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            width: 50px;
+        }
+
+        .player-name {
+            flex: 1;
+            font-weight: bold;
+        }
+
+        .player-score {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            animation: slideInRight 0.3s;
+            max-width: 350px;
+        }
+
+        .notification.success {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .notification.error {
+            border-left: 4px solid #ff6b6b;
+        }
+
+        .notification.info {
+            border-left: 4px solid #2196F3;
+        }
+
+        /* User Profile */
+        .user-profile {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1rem;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .ip-text {
+                font-size: 1.3rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header class="header">
-      <div class="brand">
-        <div class="logo">CP</div>
-        <div>
-          <h1>Craftpick Network</h1>
-          <p class="small">Un serveur, une révolution · 1.8.8</p>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">⛏️ CRAFTPICK NETWORK</div>
+        <div class="nav-links">
+            <a href="#" onclick="navigateOrLogin('lobby')">Lobby</a>
+            <a href="#minijeux">Mini-Jeux</a>
+            <a href="#boutique">Boutique</a>
+            <a href="#classement">Classement</a>
+            <button class="btn-secondary" onclick="navigateOrLogin('vote')">🗳️ Voter</button>
+            <button class="btn-primary" id="authBtn" onclick="handleAuth()">Se Connecter</button>
         </div>
-      </div>
-      <nav>
-        <div class="link" id="navHome">Accueil</div>
-        <div class="link" id="navGames">Mini-Jeux</div>
-        <div class="link" id="navVote">Vote</div>
-        <div class="link" id="navShop">Boutique</div>
-        <button class="btn-primary" id="btnConnect">Se connecter</button>
-      </nav>
-    </header>
+    </nav>
 
-    <main class="grid" id="mainGrid">
-      <!-- Main card -->
-      <section class="card" id="mainCard">
-        <h2 class="section-title">Bienvenue sur Craftpick Network</h2>
-        <p class="small">Rejoins-nous pour des parties rapides, compétitives et funs. IP: <span class="mono" id="serverIP">craftpick.fr</span></p>
-
-        <div class="stat-grid">
-          <div class="stat">
-            <div class="small">Statut</div>
-            <div id="statusValue">Chargement...</div>
-            <div class="small" id="motd">—</div>
-          </div>
-          <div class="stat">
-            <div class="small">Joueurs</div>
-            <div id="playersValue">0 / 0</div>
-            <div class="small">En temps réel</div>
-          </div>
-          <div class="stat">
-            <div class="small">Durée moyenne</div>
-            <div id="avgDuration">—</div>
-            <div class="small">Arènes actives: <span id="activeArenas">—</span></div>
-          </div>
+    <!-- Hero Section -->
+    <div class="hero">
+        <h1>Bienvenue sur Craftpick Network</h1>
+        <p>Le meilleur serveur Minecraft 1.8.8 pour tous vos mini-jeux préférés !</p>
+        
+        <div class="server-ip">
+            <h3>🎮 Rejoignez-nous maintenant !</h3>
+            <div class="ip-container">
+                <span class="ip-text">craftpick.fr</span>
+                <button class="copy-btn" onclick="copyIP()">📋 Copier l'IP</button>
+            </div>
         </div>
 
-        <div style="margin-top:14px">
-          <h3 class="small">Arènes populaires</h3>
-          <div class="arenas" id="arenaList"></div>
+        <div class="server-status">
+            <div id="statusIndicator" class="status-online">● Serveur en ligne</div>
+            <div class="player-count" id="playerCount">127 / 500 joueurs</div>
+            <div id="motd">Bienvenue sur Craftpick Network ! 🎉</div>
         </div>
 
-        <div style="margin-top:14px" class="row">
-          <button class="link" id="btnLobby">Lobby</button>
-          <button class="link" id="btnShop">Boutique</button>
-          <button class="link" id="btnVote">Voter</button>
-          <button class="link" id="btnRecruit">Recrutement</button>
+        <div id="userProfile" style="display: none;" class="user-profile">
+            <span id="welcomeMsg"></span>
+            <button onclick="logout()" style="margin-left: 1rem; background: #ff6b6b; border: none; padding: 0.5rem 1rem; border-radius: 5px; color: white; cursor: pointer;">Déconnexion</button>
+        </div>
+    </div>
+
+    <!-- Container -->
+    <div class="container">
+        <!-- Mini-Jeux Section -->
+        <div class="section" id="minijeux">
+            <h2>🎯 Mini-Jeux Disponibles</h2>
+            <div class="grid">
+                <div class="card" onclick="navigateOrLogin('bedwars')">
+                    <h3>🛏️ BedWars</h3>
+                    <p>Protégez votre lit et détruisez ceux des adversaires !</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="bedwarsPlayers">42</div>
+                            <div class="stat-label">Joueurs</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="bedwarsArenas">8</div>
+                            <div class="stat-label">Arènes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateOrLogin('duels')">
+                    <h3>⚔️ Duels</h3>
+                    <p>Affrontez vos adversaires en combat singulier !</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="duelsPlayers">28</div>
+                            <div class="stat-label">Joueurs</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="duelsArenas">12</div>
+                            <div class="stat-label">Arènes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateOrLogin('skywars')">
+                    <h3>☁️ SkyWars</h3>
+                    <p>Survivez sur les îles flottantes et soyez le dernier debout !</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="skywarsPlayers">36</div>
+                            <div class="stat-label">Joueurs</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="skywarsArenas">6</div>
+                            <div class="stat-label">Arènes</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="navigateOrLogin('uhc')">
+                    <h3>🏆 UHC</h3>
+                    <p>Ultra Hardcore - Le dernier survivant gagne !</p>
+                    <div class="card-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="uhcPlayers">21</div>
+                            <div class="stat-label">Joueurs</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="uhcArenas">3</div>
+                            <div class="stat-label">Arènes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-      </section>
+        <!-- Boutique Section -->
+        <div class="section" id="boutique">
+            <h2>🛒 Boutique</h2>
+            <div class="grid">
+                <div class="shop-item">
+                    <h3>⭐ Grade VIP</h3>
+                    <p>Accès à des avantages exclusifs et cosmétiques premium</p>
+                    <div class="shop-price">9.99€</div>
+                    <button class="buy-btn" onclick="navigateOrLogin('buy-vip')">Acheter</button>
+                </div>
 
-      <!-- Aside -->
-      <aside class="card">
-        <div>
-          <div class="small">IP</div>
-          <div class="mono small" style="margin-top:8px;">craftpick.fr</div>
-          <div style="margin-top:10px">
-            <button class="link" id="copyIP">Copier l'IP</button>
-            <button class="link" id="goLogin">Se connecter</button>
-          </div>
+                <div class="shop-item">
+                    <h3>💎 Grade VIP+</h3>
+                    <p>Tous les avantages VIP + bonus et priorité de connexion</p>
+                    <div class="shop-price">19.99€</div>
+                    <button class="buy-btn" onclick="navigateOrLogin('buy-vip-plus')">Acheter</button>
+                </div>
+
+                <div class="shop-item">
+                    <h3>👑 Grade MVP</h3>
+                    <p>Le grade ultime avec tous les avantages possibles</p>
+                    <div class="shop-price">34.99€</div>
+                    <button class="buy-btn" onclick="navigateOrLogin('buy-mvp')">Acheter</button>
+                </div>
+
+                <div class="shop-item">
+                    <h3>🎨 Pack Cosmétiques</h3>
+                    <p>Collection exclusive de skins, particules et effets</p>
+                    <div class="shop-price">7.99€</div>
+                    <button class="buy-btn" onclick="navigateOrLogin('buy-cosmetics')">Acheter</button>
+                </div>
+            </div>
         </div>
 
-        <div style="margin-top:14px">
-          <div class="small">Stats globales</div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <div class="card" style="padding:8px;flex:1;text-align:center">Parties<br/><strong id="totalGames">—</strong></div>
-            <div class="card" style="padding:8px;flex:1;text-align:center">Arènes<br/><strong id="totalArenas">—</strong></div>
-          </div>
+        <!-- Classement Section -->
+        <div class="section" id="classement">
+            <h2>🏆 Classement Global</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div>
+                    <h3 style="color: #ffd700; margin-bottom: 1rem;">Top Joueurs</h3>
+                    <div class="leaderboard-item">
+                        <span class="rank">1</span>
+                        <span class="player-name">Notch_Gaming</span>
+                        <span class="player-score">12,450 pts</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank">2</span>
+                        <span class="player-name">Dream_Pro</span>
+                        <span class="player-score">11,230 pts</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank">3</span>
+                        <span class="player-name">TechnoBlade99</span>
+                        <span class="player-score">10,890 pts</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank">4</span>
+                        <span class="player-name">MinecraftKing</span>
+                        <span class="player-score">9,560 pts</span>
+                    </div>
+                    <div class="leaderboard-item">
+                        <span class="rank">5</span>
+                        <span class="player-name">BuildMaster2024</span>
+                        <span class="player-score">8,770 pts</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: #ffd700; margin-bottom: 1rem;">Statistiques Globales</h3>
+                    <div class="card">
+                        <h3>📊 Stats du Serveur</h3>
+                        <p><strong>Parties jouées aujourd'hui :</strong> <span id="gamesToday">1,247</span></p>
+                        <p><strong>Total arènes actives :</strong> <span id="totalArenas">29</span></p>
+                        <p><strong>Durée moyenne partie :</strong> <span id="avgDuration">12m 34s</span></p>
+                        <p><strong>Joueurs inscrits :</strong> 45,678</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </aside>
-    </main>
 
-    <footer style="margin-top:20px;text-align:center;color:var(--muted)">
-      © <span id="year"></span> Craftpick Network — IP: <span class="mono">craftpick.fr</span>
-    </footer>
-  </div>
+        <!-- Contact Section -->
+        <div class="section">
+            <h2>📞 Contact & Recrutement</h2>
+            <div class="grid">
+                <div class="card" onclick="navigateOrLogin('recruitment')">
+                    <h3>💼 Recrutement Staff</h3>
+                    <p>Rejoignez notre équipe de modérateurs et administrateurs !</p>
+                </div>
+                <div class="card" onclick="navigateOrLogin('support')">
+                    <h3>🛟 Support</h3>
+                    <p>Besoin d'aide ? Contactez notre équipe de support 24/7</p>
+                </div>
+                <div class="card" onclick="navigateOrLogin('discord')">
+                    <h3>💬 Discord</h3>
+                    <p>Rejoignez notre communauté Discord avec plus de 10,000 membres</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Modal (login/register/profile) -->
-  <div class="modal" id="modal">
-    <div class="box" id="modalBox"></div>
-  </div>
+    <script>
+        // Variables globales pour simulation
+        let playerCount = 127;
+        let maxPlayers = 500;
+        let isOnline = true;
 
-  <div class="notify" id="notify">Message</div>
+        // Stats pour mini-jeux
+        let gameStats = {
+            bedwars: { players: 42, arenas: 8 },
+            duels: { players: 28, arenas: 12 },
+            skywars: { players: 36, arenas: 6 },
+            uhc: { players: 21, arenas: 3 }
+        };
 
-<script>
-/*
-  FRONTEND: Fully contained single-file.
-  - To use real backend: set API_BASE to your API URL (no trailing slash), e.g. https://api.mydomain.com
-  - If API_BASE is null, the UI uses simulated responses.
-*/
-const API_BASE = null; // <<<<<< set your backend url here (string) to enable real mode
-const loginPage = "https://louisoff84.github.io/craftpick.fr/login-register.html"; // fallback
+        let globalStats = {
+            gamesToday: 1247,
+            totalArenas: 29,
+            avgDuration: '12m 34s'
+        };
 
-// Utilities
-function showNotify(msg){ const n=document.getElementById('notify'); n.textContent=msg; n.style.display='block'; setTimeout(()=>n.style.display='none',2400); }
-function el(id){ return document.getElementById(id); }
-el('year').textContent = new Date().getFullYear();
+        // Vérifier si utilisateur connecté
+        function isUserLoggedIn() {
+            return localStorage.getItem('craftpickUser') !== null;
+        }
 
-// Mock / API functions
-async function api_getStatus(){
-  if(!API_BASE) return mockStatus();
-  try{
-    const r = await fetch(API_BASE + '/api/status');
-    return await r.json();
-  }catch(e){ return {online:false,players:0,maxPlayers:0,motd:'Erreur API'}; }
-}
-async function api_getStats(){
-  if(!API_BASE) return mockStats();
-  try{
-    const r = await fetch(API_BASE + '/api/stats');
-    return await r.json();
-  }catch(e){ return {avgDuration:'—',arenas:0,totalGames:0}; }
-}
+        // Navigation avec vérification connexion
+        function navigateOrLogin(destination) {
+            if (!isUserLoggedIn()) {
+                showNotification('Vous devez être connecté pour accéder à cette fonctionnalité', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login-register.html';
+                }, 1500);
+            } else {
+                showNotification(`Accès à ${destination} en cours...`, 'success');
+            }
+        }
 
-// Mock data
-function mockStatus(){ const online = Math.random() > 0.05; const players = online? Math.floor(Math.random()*80):0; return {online,players,max:200,motd:'§aCraftpick Network — Mini-jeux 1.8.8'} }
-function mockStats(){ return {avgDuration:'12m 34s',arenas:12,totalGames:18452} }
+        // Gestion authentification
+        function handleAuth() {
+            if (isUserLoggedIn()) {
+                // Si connecté, afficher profil
+                const user = JSON.parse(localStorage.getItem('craftpickUser'));
+                showNotification(`Bonjour ${user.pseudo} !`, 'success');
+            } else {
+                window.location.href = 'login-register.html';
+            }
+        }
 
-// UI renderers
-async function updateStatus(){
-  const s = await api_getStatus();
-  el('statusValue').textContent = s.online? 'En ligne' : 'Hors-ligne';
-  el('motd').textContent = s.motd || '';
-  el('playersValue').textContent = `${s.players} / ${s.max}`;
-}
-async function updateStats(){
-  const st = await api_getStats();
-  el('avgDuration').textContent = st.avgDuration;
-  el('activeArenas').textContent = st.arenas;
-  el('totalGames').textContent = st.totalGames.toLocaleString('fr-FR');
-  el('totalArenas').textContent = st.arenas;
-}
-function renderArenas(){
-  const examples = [{name:'Île de fer',mode:'BedWars',players:8},{name:'Forteresse',mode:'BedWars',players:8},{name:'Nautilus',mode:'Duels',players:4},{name:'Cité céleste',mode:'BedWars',players:12}];
-  const wrap = el('arenaList'); wrap.innerHTML='';
-  examples.forEach(a=>{
-    const d = document.createElement('div'); d.className='arena';
-    d.innerHTML = `<div><strong>${a.name}</strong><div class="small">${a.mode} · ${a.players} joueurs</div></div><div><button class="link join" data-arena="${a.name}">Rejoindre</button></div>`;
-    wrap.appendChild(d);
-  });
-}
+        // Copier IP
+        function copyIP() {
+            navigator.clipboard.writeText('craftpick.fr').then(() => {
+                showNotification('IP copiée dans le presse-papiers ! 🎉', 'success');
+            });
+        }
 
-// Modal UI (login/register/profile)
-const modal = el('modal'), modalBox = el('modalBox');
-function openModal(html){ modalBox.innerHTML = html; modal.classList.add('show'); modal.style.display='flex'; attachModalHandlers(); }
-function closeModal(){ modal.classList.remove('show'); modal.style.display='none'; }
-modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+        // Déconnexion
+        function logout() {
+            localStorage.removeItem('craftpickUser');
+            showNotification('Déconnexion réussie !', 'success');
+            updateUI();
+        }
 
-function attachModalHandlers(){
-  // login form
-  const loginForm = document.getElementById('loginForm');
-  if(loginForm) loginForm.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const form = new FormData(loginForm);
-    const payload = {user: form.get('user'), pass: form.get('pass')};
-    if(!API_BASE){
-      closeModal(); showNotify('Connecté — simulation'); localStorage.setItem('cp_user', payload.user); renderLogged();
-      return;
-    }
-    // real login
-    try{
-      const r = await fetch(API_BASE + '/api/auth/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      const data = await r.json();
-      if(r.ok){ localStorage.setItem('cp_token', data.token); localStorage.setItem('cp_user', payload.user); closeModal(); showNotify('Connecté'); renderLogged(); }
-      else showNotify(data.message || 'Erreur connexion');
-    }catch(err){ showNotify('Erreur réseau'); }
-  });
+        // Afficher notifications
+        function showNotification(message, type = 'info') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.textContent = message;
+            document.body.appendChild(notif);
 
-  // register form
-  const regForm = document.getElementById('registerForm');
-  if(regForm) regForm.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const f = new FormData(regForm);
-    const payload = { user:f.get('user'), email:f.get('email'), pass:f.get('pass'), pass2:f.get('pass2')};
-    if(payload.pass !== payload.pass2){ showNotify('Les mots de passe ne correspondent pas'); return; }
-    if(!API_BASE){
-      closeModal(); showNotify('Compte créé — simulation'); localStorage.setItem('cp_user', payload.user); renderLogged(); return;
-    }
-    try{
-      const r = await fetch(API_BASE + '/api/auth/register', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      const data = await r.json();
-      if(r.ok){ closeModal(); showNotify('Compte créé'); localStorage.setItem('cp_token', data.token); localStorage.setItem('cp_user', payload.user); renderLogged(); }
-      else showNotify(data.message || 'Erreur inscription');
-    }catch(err){ showNotify('Erreur réseau'); }
-  });
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
 
-  // simple buttons in modal (toggle)
-  const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=> showRegister());
-  const toLog = document.getElementById('toLogin'); if(toLog) toLog.addEventListener('click', ()=> showLogin());
-  const closeBtn = document.getElementById('modalClose'); if(closeBtn) closeBtn.addEventListener('click', closeModal);
-}
+        // Mise à jour de l'interface utilisateur
+        function updateUI() {
+            const authBtn = document.getElementById('authBtn');
+            const userProfile = document.getElementById('userProfile');
+            const welcomeMsg = document.getElementById('welcomeMsg');
 
-// Modal screens
-function showLogin(){
-  openModal(`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>Connexion</strong><button id="modalClose" class="link">Fermer</button></div>
-    <form id="loginForm">
-      <input name="user" placeholder="Pseudo" required>
-      <input name="pass" placeholder="Mot de passe" type="password" required>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn-primary" type="submit">Se connecter</button>
-        <button type="button" class="link" id="toRegister">S'inscrire</button>
-      </div>
-    </form>`);
-}
+            if (isUserLoggedIn()) {
+                const user = JSON.parse(localStorage.getItem('craftpickUser'));
+                authBtn.textContent = '👤 Profil';
+                userProfile.style.display = 'inline-block';
+                welcomeMsg.textContent = `Bienvenue, ${user.pseudo} ! 🎮`;
+            } else {
+                authBtn.textContent = 'Se Connecter';
+                userProfile.style.display = 'none';
+            }
+        }
 
-function showRegister(){
-  openModal(`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>Inscription</strong><button id="modalClose" class="link">Fermer</button></div>
-    <form id="registerForm">
-      <input name="user" placeholder="Pseudo" required>
-      <input name="email" placeholder="Email (optionnel)" type="email">
-      <input name="pass" placeholder="Mot de passe" type="password" required>
-      <input name="pass2" placeholder="Confirme le mot de passe" type="password" required>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn-primary" type="submit">Créer</button>
-        <button type="button" class="link" id="toLogin">Connexion</button>
-      </div>
-    </form>`);
-}
+        // Simulation statut serveur
+        function updateServerStatus() {
+            // Variation aléatoire du nombre de joueurs
+            const change = Math.floor(Math.random() * 11) - 5;
+            playerCount = Math.max(50, Math.min(maxPlayers, playerCount + change));
+            
+            document.getElementById('playerCount').textContent = `${playerCount} / ${maxPlayers} joueurs`;
 
-function showProfile(){
-  const user = localStorage.getItem('cp_user') || 'Invité';
-  openModal(`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>Profil</strong><button id="modalClose" class="link">Fermer</button></div>
-    <div>
-      <div class="small">Pseudo</div><div class="mono" style="margin-top:6px">${user}</div>
-      <div style="margin-top:10px" class="small">Actions</div>
-      <div style="display:flex;gap:8px;margin-top:8px">
-        <button class="link" id="btnLogout">Se déconnecter</button>
-        <button class="link" id="btnProfileStats">Mes stats</button>
-      </div>
-    </div>`);
-  // attach
-  document.getElementById('btnLogout').addEventListener('click', ()=>{
-    localStorage.removeItem('cp_token'); localStorage.removeItem('cp_user'); closeModal(); showNotify('Déconnecté'); renderLogged();
-  });
-  document.getElementById('btnProfileStats').addEventListener('click', ()=> {
-    closeModal(); showNotify('Stats du profil — simulation'); // placeholder
-  });
-}
+            // Mise à jour stats mini-jeux
+            for (let game in gameStats) {
+                const playerChange = Math.floor(Math.random() * 7) - 3;
+                gameStats[game].players = Math.max(5, gameStats[game].players + playerChange);
+                document.getElementById(`${game}Players`).textContent = gameStats[game].players;
+            }
 
-// Logged rendering: change connect button
-function renderLogged(){
-  const btn = el('btnConnect');
-  const user = localStorage.getItem('cp_user');
-  if(user){ btn.textContent = user; btn.removeEventListener('click', handleConnect); btn.addEventListener('click', showProfile); }
-  else { btn.textContent = 'Se connecter'; btn.removeEventListener('click', showProfile); btn.addEventListener('click', handleConnect); }
-}
+            // Mise à jour stats globales
+            globalStats.gamesToday += Math.floor(Math.random() * 5);
+            document.getElementById('gamesToday').textContent = globalStats.gamesToday.toLocaleString();
+        }
 
-// click handlers that redirect to login page if not logged
-function guardOrRedirect(target){
-  if(localStorage.getItem('cp_user')) { showNotify('Redirection vers ' + target + ' — simulation'); /* open real page when implemented */ }
-  else window.location.href = "login-register.html";
-}
-
-// initial click handlers
-function handleConnect(){ if(API_BASE) showLogin(); else window.location.href = "login-register.html"; }
-el('btnConnect').addEventListener('click', handleConnect);
-el('goLogin').addEventListener('click', ()=> window.location.href = "login-register.html");
-el('copyIP').addEventListener('click', ()=> { navigator.clipboard.writeText('craftpick.fr'); showNotify('IP copiée !'); });
-
-// menu buttons -> redirect to login page if not logged, otherwise simulate
-el('navHome').addEventListener('click', ()=> guardOrRedirect('Accueil'));
-el('navGames').addEventListener('click', ()=> guardOrRedirect('Mini-Jeux'));
-el('navVote').addEventListener('click', ()=> guardOrRedirect('Vote'));
-el('navShop').addEventListener('click', ()=> guardOrRedirect('Boutique'));
-
-el('btnLobby').addEventListener('click', ()=> guardOrRedirect('Lobby'));
-el('btnShop').addEventListener('click', ()=> guardOrRedirect('Boutique'));
-el('btnVote').addEventListener('click', ()=> guardOrRedirect('Vote'));
-el('btnRecruit').addEventListener('click', ()=> guardOrRedirect('Recrutement'));
-
-// init
-renderArenas(); updateStatus(); updateStats(); renderLogged();
-setInterval(updateStatus,7000); setInterval(updateStats,15000);
-</script>
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+            
+            // Mise à jour périodique (toutes les 10 secondes)
+            setInterval(updateServerStatus, 10000);
+        });
+    </script>
 </body>
 </html>
