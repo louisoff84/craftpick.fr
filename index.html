@@ -1,270 +1,336 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Craftpick Network — Site</title>
-  <meta name="description" content="Site officiel - Craftpick Network" />
-  <style>
-    /* ---------- Reset & base ---------- */
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --bg1:#0f1724;--bg2:#0b1220;--card:#0f172a;--muted:#9aa4b2;--glass:rgba(255,255,255,0.04);
-      --accent1:#6366f1;--accent2:#ec4899;--success:#10b981
-    }
-    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef8;min-height:100vh}
-    a{color:inherit;text-decoration:none}
-    .container{max-width:1100px;margin:28px auto;padding:20px}
-
-    /* ---------- Header ---------- */
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:18px;box-shadow:0 6px 24px rgba(0,0,0,0.5)}
-    .brand h1{font-size:18px}
-    .brand p{color:var(--muted);font-size:12px;margin-top:4px}
-    .header-actions{display:flex;gap:8px;align-items:center}
-    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;cursor:pointer}
-    .btn.primary{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:white;border:none}
-
-    /* ---------- Grid ---------- */
-    .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:18px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:14px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.02)}
-
-    /* ---------- Status & stats ---------- */
-    .status-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
-    .stat{flex:1;min-width:140px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02)}
-    .stat .label{font-size:11px;color:var(--muted)}
-    .stat .value{font-weight:700;font-size:18px;margin-top:6px}
-
-    /* ---------- Arena list ---------- */
-    .arenas{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px}
-    .arena{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
-
-    /* ---------- Aside ---------- */
-    aside .shortcut{display:flex;flex-direction:column;gap:8px}
-    .shortcut .box{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);text-align:center}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace}
-
-    /* ---------- Footer ---------- */
-    footer{margin-top:18px;padding:18px;text-align:center;color:var(--muted);font-size:13px}
-
-    /* ---------- Modal ---------- */
-    .modal-back{position:fixed;inset:0;background:rgba(2,6,23,0.6);display:none;align-items:center;justify-content:center}
-    .modal{width:360px;background:linear-gradient(180deg,#071024,#061223);padding:18px;border-radius:12px}
-    .modal.show{display:flex}
-    input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;margin-top:8px}
-
-    /* ---------- small ---------- */
-    .small{font-size:12px;color:var(--muted)}
-    .notify{position:fixed;right:20px;bottom:20px;background:#0b1220;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-
-    /* Responsive */
-    @media (max-width:900px){.grid{grid-template-columns:1fr}.brand h1{font-size:16px}.logo{width:48px;height:48px}}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Craftpick Network — Site complet</title>
+<style>
+/* ---------- Reset & base ---------- */
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,Arial,sans-serif}
+:root{
+  --bg1:#071024;--bg2:#061223;--muted:#9aa4b2;--glass:rgba(255,255,255,0.03);
+  --accent1:#6366f1;--accent2:#ec4899;--success:#10b981
+}
+body{background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#e6eef8;min-height:100vh}
+.container{max-width:1100px;margin:28px auto;padding:18px}
+/* header */
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:18px}
+.brand h1{font-size:18px}
+.brand p{color:var(--muted);font-size:12px}
+/* nav */
+nav{display:flex;gap:12px;align-items:center}
+.link{padding:8px 12px;border-radius:10px;background:var(--glass);cursor:pointer}
+.btn-primary{padding:8px 12px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));border:none;color:white;cursor:pointer}
+/* layout */
+.grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:18px}
+.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.02)}
+.stat-grid{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.stat{flex:1;min-width:140px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02)}
+.small{font-size:13px;color:var(--muted)}
+.arenas{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin-top:12px}
+.arena{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
+/* modal */
+.modal {position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6)}
+.modal .box{width:420px;background:#071225;padding:18px;border-radius:12px}
+.modal.show{display:flex}
+/* forms */
+input,textarea,select{width:100%;padding:10px;margin-top:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);color:inherit}
+button{cursor:pointer}
+.notify{position:fixed;right:20px;bottom:20px;background:#081022;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);display:none}
+/* responsive */
+@media(max-width:900px){.grid{grid-template-columns:1fr}.logo{width:48px;height:48px}}
+/* small helpers */
+.row{display:flex;gap:10px;align-items:center}
+.center{display:flex;align-items:center;justify-content:center}
+.mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, monospace}
+.section-title{font-size:18px;margin-bottom:8px}
+.hidden{display:none}
+</style>
 </head>
 <body>
   <div class="container">
-    <header>
+    <header class="header">
       <div class="brand">
         <div class="logo">CP</div>
         <div>
           <h1>Craftpick Network</h1>
-          <p>Un serveur, une révolution · Mini-jeux 1.8.8</p>
+          <p class="small">Un serveur, une révolution · 1.8.8</p>
         </div>
       </div>
-
-      <div class="header-actions">
-        <button class="btn" id="btn-copy">Copier l'IP</button>
-        <button class="btn" id="btn-vote">Voter</button>
-        <button class="btn primary" id="btn-login">Se connecter</button>
-      </div>
+      <nav>
+        <div class="link" id="navHome">Accueil</div>
+        <div class="link" id="navGames">Mini-Jeux</div>
+        <div class="link" id="navVote">Vote</div>
+        <div class="link" id="navShop">Boutique</div>
+        <button class="btn-primary" id="btnConnect">Se connecter</button>
+      </nav>
     </header>
 
-    <main class="grid">
-      <section class="card">
-        <h2 style="font-size:20px">Bienvenue sur Craftpick Network</h2>
-        <p class="small" style="margin-top:8px">IP du serveur : <span class="mono" id="server-ip">craftpick.fr</span></p>
+    <main class="grid" id="mainGrid">
+      <!-- Main card -->
+      <section class="card" id="mainCard">
+        <h2 class="section-title">Bienvenue sur Craftpick Network</h2>
+        <p class="small">Rejoins-nous pour des parties rapides, compétitives et funs. IP: <span class="mono" id="serverIP">craftpick.fr</span></p>
 
-        <div class="status-row" style="margin-top:12px">
+        <div class="stat-grid">
           <div class="stat">
-            <div class="label">Statut</div>
-            <div class="value" id="server-status">Chargement...</div>
-            <div class="small" id="server-motd">—</div>
+            <div class="small">Statut</div>
+            <div id="statusValue">Chargement...</div>
+            <div class="small" id="motd">—</div>
           </div>
-
           <div class="stat">
-            <div class="label">Joueurs</div>
-            <div class="value" id="server-players">0 / 0</div>
-            <div class="small">Rafraîchissement automatique</div>
+            <div class="small">Joueurs</div>
+            <div id="playersValue">0 / 0</div>
+            <div class="small">En temps réel</div>
           </div>
-
           <div class="stat">
-            <div class="label">Durée moyenne</div>
-            <div class="value" id="avg-duration">—</div>
-            <div class="small">Arènes actives: <span id="active-arenas">—</span></div>
+            <div class="small">Durée moyenne</div>
+            <div id="avgDuration">—</div>
+            <div class="small">Arènes actives: <span id="activeArenas">—</span></div>
           </div>
         </div>
 
         <div style="margin-top:14px">
-          <h3 style="font-size:16px">Arènes populaires</h3>
-          <div class="arenas" id="arena-list">
-            <!-- listes remplies en JS -->
-          </div>
+          <h3 class="small">Arènes populaires</h3>
+          <div class="arenas" id="arenaList"></div>
         </div>
 
-        <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-          <button class="btn" onclick="location.href='/lobby'">Lobby</button>
-          <button class="btn" onclick="location.href='/boutique'">Boutique</button>
-          <button class="btn" onclick="location.href='/recrutement'">Recrutement</button>
-          <button class="btn" id="btn-contact">Contact</button>
+        <div style="margin-top:14px" class="row">
+          <button class="link" id="btnLobby">Lobby</button>
+          <button class="link" id="btnShop">Boutique</button>
+          <button class="link" id="btnVote">Voter</button>
+          <button class="link" id="btnRecruit">Recrutement</button>
         </div>
+
       </section>
 
+      <!-- Aside -->
       <aside class="card">
-        <div class="shortcut">
-          <div class="box">
-            <div class="small">IP</div>
-            <div class="mono" style="margin-top:6px">craftpick.fr</div>
-            <button class="btn" style="margin-top:8px;width:100%" id="aside-copy">Copier</button>
-          </div>
-
-          <div class="box" style="text-align:left">
-            <div class="small">Boutique</div>
-            <div class="small" style="margin-top:6px">Grades, cosmétiques</div>
-            <button class="btn" style="margin-top:8px;width:100%" onclick="location.href='/boutique'">Visiter</button>
-          </div>
-
-          <div class="box" style="text-align:left">
-            <div class="small">Vote</div>
-            <div class="small" style="margin-top:6px">Aide le serveur & gagne des récompenses</div>
-            <button class="btn" style="margin-top:8px;width:100%" id="aside-vote">Voter</button>
+        <div>
+          <div class="small">IP</div>
+          <div class="mono small" style="margin-top:8px;">craftpick.fr</div>
+          <div style="margin-top:10px">
+            <button class="link" id="copyIP">Copier l'IP</button>
+            <button class="link" id="goLogin">Se connecter</button>
           </div>
         </div>
 
-        <div style="margin-top:12px">
-          <div class="small">Stats Globales</div>
+        <div style="margin-top:14px">
+          <div class="small">Stats globales</div>
           <div style="display:flex;gap:8px;margin-top:8px">
-            <div class="box" style="flex:1">Parties<br/><strong id="total-games">—</strong></div>
-            <div class="box" style="flex:1">Arènes<br/><strong id="total-arenas">—</strong></div>
+            <div class="card" style="padding:8px;flex:1;text-align:center">Parties<br/><strong id="totalGames">—</strong></div>
+            <div class="card" style="padding:8px;flex:1;text-align:center">Arènes<br/><strong id="totalArenas">—</strong></div>
           </div>
         </div>
-
       </aside>
     </main>
 
-    <footer>
-      © <span id="year"></span> Craftpick Network — IP: <span class="mono">craftpick.fr</span> · Version: 1.8.8
+    <footer style="margin-top:20px;text-align:center;color:var(--muted)">
+      © <span id="year"></span> Craftpick Network — IP: <span class="mono">craftpick.fr</span>
     </footer>
   </div>
 
-  <!-- Modal login / contact -->
-  <div class="modal-back" id="modal-back">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div id="modal-content">
-        <!-- contenu injecté par JS -->
-      </div>
-    </div>
+  <!-- Modal (login/register/profile) -->
+  <div class="modal" id="modal">
+    <div class="box" id="modalBox"></div>
   </div>
 
-  <div class="notify" id="notify" style="display:none">Message</div>
+  <div class="notify" id="notify">Message</div>
 
-  <script>
-    (function(){
-      const serverIP = 'craftpick.fr';
-      const ipEls = document.querySelectorAll('#server-ip');
-      ipEls.forEach(e=>e.textContent = serverIP);
-      document.getElementById('year').textContent = new Date().getFullYear();
+<script>
+/*
+  FRONTEND: Fully contained single-file.
+  - To use real backend: set API_BASE to your API URL (no trailing slash), e.g. https://api.mydomain.com
+  - If API_BASE is null, the UI uses simulated responses.
+*/
+const API_BASE = null; // <<<<<< set your backend url here (string) to enable real mode
+const loginPage = "https://louisoff84.github.io/craftpick.fr/login-register.html"; // fallback
 
-      // Mock data (remplacer par fetch vers votre endpoint Minecraft status)
-      function getMockStatus(){
-        const online = Math.random() > 0.05;
-        const players = online ? Math.floor(Math.random()*120) : 0;
-        const max = 200;
-        const motd = '§aCraftpick Network — Mini-jeux 1.8.8';
-        return {online,players,max,motd};
-      }
+// Utilities
+function showNotify(msg){ const n=document.getElementById('notify'); n.textContent=msg; n.style.display='block'; setTimeout(()=>n.style.display='none',2400); }
+function el(id){ return document.getElementById(id); }
+el('year').textContent = new Date().getFullYear();
 
-      function getMockStats(){
-        return {avgDuration: '12m 34s', arenas: 12, totalGames: 18452};
-      }
+// Mock / API functions
+async function api_getStatus(){
+  if(!API_BASE) return mockStatus();
+  try{
+    const r = await fetch(API_BASE + '/api/status');
+    return await r.json();
+  }catch(e){ return {online:false,players:0,maxPlayers:0,motd:'Erreur API'}; }
+}
+async function api_getStats(){
+  if(!API_BASE) return mockStats();
+  try{
+    const r = await fetch(API_BASE + '/api/stats');
+    return await r.json();
+  }catch(e){ return {avgDuration:'—',arenas:0,totalGames:0}; }
+}
 
-      // Update UI
-      function updateStatus(){
-        // Si vous avez une API: fetch('/api/status').then(r=>r.json()).then(updateFromAPI)
-        const s = getMockStatus();
-        document.getElementById('server-status').textContent = s.online ? 'En ligne' : 'Hors-ligne';
-        document.getElementById('server-motd').textContent = s.motd;
-        document.getElementById('server-players').textContent = `${s.players} / ${s.max}`;
-      }
+// Mock data
+function mockStatus(){ const online = Math.random() > 0.05; const players = online? Math.floor(Math.random()*80):0; return {online,players,max:200,motd:'§aCraftpick Network — Mini-jeux 1.8.8'} }
+function mockStats(){ return {avgDuration:'12m 34s',arenas:12,totalGames:18452} }
 
-      function updateStats(){
-        const st = getMockStats();
-        document.getElementById('avg-duration').textContent = st.avgDuration;
-        document.getElementById('active-arenas').textContent = st.arenas;
-        document.getElementById('total-games').textContent = st.totalGames.toLocaleString('fr-FR');
-        document.getElementById('total-arenas').textContent = st.arenas;
-      }
+// UI renderers
+async function updateStatus(){
+  const s = await api_getStatus();
+  el('statusValue').textContent = s.online? 'En ligne' : 'Hors-ligne';
+  el('motd').textContent = s.motd || '';
+  el('playersValue').textContent = `${s.players} / ${s.max}`;
+}
+async function updateStats(){
+  const st = await api_getStats();
+  el('avgDuration').textContent = st.avgDuration;
+  el('activeArenas').textContent = st.arenas;
+  el('totalGames').textContent = st.totalGames.toLocaleString('fr-FR');
+  el('totalArenas').textContent = st.arenas;
+}
+function renderArenas(){
+  const examples = [{name:'Île de fer',mode:'BedWars',players:8},{name:'Forteresse',mode:'BedWars',players:8},{name:'Nautilus',mode:'Duels',players:4},{name:'Cité céleste',mode:'BedWars',players:12}];
+  const wrap = el('arenaList'); wrap.innerHTML='';
+  examples.forEach(a=>{
+    const d = document.createElement('div'); d.className='arena';
+    d.innerHTML = `<div><strong>${a.name}</strong><div class="small">${a.mode} · ${a.players} joueurs</div></div><div><button class="link join" data-arena="${a.name}">Rejoindre</button></div>`;
+    wrap.appendChild(d);
+  });
+}
 
-      // Arena list
-      const arenaExamples = [
-        {name:'Île de fer',mode:'BedWars',players:8},
-        {name:'Forteresse',mode:'BedWars',players:8},
-        {name:'Nautilus',mode:'Duels',players:4},
-        {name:'Cité céleste',mode:'BedWars',players:12}
-      ];
-      function renderArenas(){
-        const wrap = document.getElementById('arena-list');
-        wrap.innerHTML = '';
-        arenaExamples.forEach(a=>{
-          const d = document.createElement('div'); d.className='arena';
-          d.innerHTML = `<div><strong>${a.name}</strong><div class=\"small\">${a.mode} · ${a.players} joueurs</div></div><div><button class=\"btn\">Rejoindre</button></div>`;
-          wrap.appendChild(d);
-        });
-      }
+// Modal UI (login/register/profile)
+const modal = el('modal'), modalBox = el('modalBox');
+function openModal(html){ modalBox.innerHTML = html; modal.classList.add('show'); modal.style.display='flex'; attachModalHandlers(); }
+function closeModal(){ modal.classList.remove('show'); modal.style.display='none'; }
+modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
 
-      // copy IP
-      function showNotice(t){const n=document.getElementById('notify');n.textContent=t;n.style.display='block';setTimeout(()=>n.style.display='none',2600)}
-      document.getElementById('btn-copy').addEventListener('click',()=>{navigator.clipboard.writeText(serverIP).then(()=>showNotice('IP copiée !'))});
-      document.getElementById('aside-copy').addEventListener('click',()=>{navigator.clipboard.writeText(serverIP).then(()=>showNotice('IP copiée !'))});
+function attachModalHandlers(){
+  // login form
+  const loginForm = document.getElementById('loginForm');
+  if(loginForm) loginForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const form = new FormData(loginForm);
+    const payload = {user: form.get('user'), pass: form.get('pass')};
+    if(!API_BASE){
+      closeModal(); showNotify('Connecté — simulation'); localStorage.setItem('cp_user', payload.user); renderLogged();
+      return;
+    }
+    // real login
+    try{
+      const r = await fetch(API_BASE + '/api/auth/login', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const data = await r.json();
+      if(r.ok){ localStorage.setItem('cp_token', data.token); localStorage.setItem('cp_user', payload.user); closeModal(); showNotify('Connecté'); renderLogged(); }
+      else showNotify(data.message || 'Erreur connexion');
+    }catch(err){ showNotify('Erreur réseau'); }
+  });
 
-      // Vote / boutique
-      document.getElementById('btn-vote').addEventListener('click',()=>{window.open('/vote','_blank')});
-      document.getElementById('aside-vote').addEventListener('click',()=>{window.open('/vote','_blank')});
+  // register form
+  const regForm = document.getElementById('registerForm');
+  if(regForm) regForm.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const f = new FormData(regForm);
+    const payload = { user:f.get('user'), email:f.get('email'), pass:f.get('pass'), pass2:f.get('pass2')};
+    if(payload.pass !== payload.pass2){ showNotify('Les mots de passe ne correspondent pas'); return; }
+    if(!API_BASE){
+      closeModal(); showNotify('Compte créé — simulation'); localStorage.setItem('cp_user', payload.user); renderLogged(); return;
+    }
+    try{
+      const r = await fetch(API_BASE + '/api/auth/register', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      const data = await r.json();
+      if(r.ok){ closeModal(); showNotify('Compte créé'); localStorage.setItem('cp_token', data.token); localStorage.setItem('cp_user', payload.user); renderLogged(); }
+      else showNotify(data.message || 'Erreur inscription');
+    }catch(err){ showNotify('Erreur réseau'); }
+  });
 
-      // contact modal
-      const modalBack = document.getElementById('modal-back');
-      function openModal(html){document.getElementById('modal-content').innerHTML=html;modalBack.classList.add('show')}
-      function closeModal(){modalBack.classList.remove('show')}
-      modalBack.addEventListener('click',(e)=>{if(e.target===modalBack)closeModal()});
+  // simple buttons in modal (toggle)
+  const toReg = document.getElementById('toRegister'); if(toReg) toReg.addEventListener('click', ()=> showRegister());
+  const toLog = document.getElementById('toLogin'); if(toLog) toLog.addEventListener('click', ()=> showLogin());
+  const closeBtn = document.getElementById('modalClose'); if(closeBtn) closeBtn.addEventListener('click', closeModal);
+}
 
-      document.getElementById('btn-contact').addEventListener('click',()=>{
-        openModal(`<h3 style="font-size:16px">Contact</h3>
-          <p class=\"small\">Envoie-nous un message et nous répondrons sur Discord.</p>
-          <form id=\"contact-form\">\n  <input name=\"name\" placeholder=\"Ton pseudo\" required>\n  <input name=\"email\" placeholder=\"Email (optionnel)\">\n  <textarea name=\"msg\" placeholder=\"Message...\" rows=4 required></textarea>\n  <div style=\"display:flex;gap:8px;margin-top:10px\">\n    <button type=\"submit\" class=\"btn primary\">Envoyer</button>\n    <button type=\"button\" class=\"btn\" id=\"cancel-contact\">Annuler</button>\n  </div>\n</form>`);
-        document.getElementById('cancel-contact').addEventListener('click',closeModal);
-        document.getElementById('contact-form').addEventListener('submit',function(e){e.preventDefault();closeModal();showNotice('Message envoyé — simulation');});
-      });
+// Modal screens
+function showLogin(){
+  openModal(`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>Connexion</strong><button id="modalClose" class="link">Fermer</button></div>
+    <form id="loginForm">
+      <input name="user" placeholder="Pseudo" required>
+      <input name="pass" placeholder="Mot de passe" type="password" required>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn-primary" type="submit">Se connecter</button>
+        <button type="button" class="link" id="toRegister">S'inscrire</button>
+      </div>
+    </form>`);
+}
 
-      // login modal
-      document.getElementById('btn-login').addEventListener('click',()=>{
-        openModal(`<h3 style=\"font-size:16px\">Se connecter (simulation)</h3>
-          <form id=\"login-form\">\n  <input name=\"user\" placeholder=\"Pseudo\" required>\n  <input name=\"pass\" type=\"password\" placeholder=\"Mot de passe\" required>\n  <div style=\"display:flex;gap:8px;margin-top:10px\">\n    <button type=\"submit\" class=\"btn primary\">Se connecter</button>\n    <button type=\"button\" class=\"btn\" id=\"cancel-login\">Annuler</button>\n  </div>\n</form>`);
-        document.getElementById('cancel-login').addEventListener('click',closeModal);
-        document.getElementById('login-form').addEventListener('submit',function(e){e.preventDefault();closeModal();showNotice('Connecté — simulation');});
-      });
+function showRegister(){
+  openModal(`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>Inscription</strong><button id="modalClose" class="link">Fermer</button></div>
+    <form id="registerForm">
+      <input name="user" placeholder="Pseudo" required>
+      <input name="email" placeholder="Email (optionnel)" type="email">
+      <input name="pass" placeholder="Mot de passe" type="password" required>
+      <input name="pass2" placeholder="Confirme le mot de passe" type="password" required>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn-primary" type="submit">Créer</button>
+        <button type="button" class="link" id="toLogin">Connexion</button>
+      </div>
+    </form>`);
+}
 
-      // initial render
-      renderArenas(); updateStatus(); updateStats();
+function showProfile(){
+  const user = localStorage.getItem('cp_user') || 'Invité';
+  openModal(`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong>Profil</strong><button id="modalClose" class="link">Fermer</button></div>
+    <div>
+      <div class="small">Pseudo</div><div class="mono" style="margin-top:6px">${user}</div>
+      <div style="margin-top:10px" class="small">Actions</div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="link" id="btnLogout">Se déconnecter</button>
+        <button class="link" id="btnProfileStats">Mes stats</button>
+      </div>
+    </div>`);
+  // attach
+  document.getElementById('btnLogout').addEventListener('click', ()=>{
+    localStorage.removeItem('cp_token'); localStorage.removeItem('cp_user'); closeModal(); showNotify('Déconnecté'); renderLogged();
+  });
+  document.getElementById('btnProfileStats').addEventListener('click', ()=> {
+    closeModal(); showNotify('Stats du profil — simulation'); // placeholder
+  });
+}
 
-      // polling
-      setInterval(updateStatus,7000);
-      setInterval(updateStats,15000);
+// Logged rendering: change connect button
+function renderLogged(){
+  const btn = el('btnConnect');
+  const user = localStorage.getItem('cp_user');
+  if(user){ btn.textContent = user; btn.removeEventListener('click', handleConnect); btn.addEventListener('click', showProfile); }
+  else { btn.textContent = 'Se connecter'; btn.removeEventListener('click', showProfile); btn.addEventListener('click', handleConnect); }
+}
 
-      // helpful tip: replace getMockStatus/getMockStats with fetch() to your real API endpoints.
-      // Exemple (backend must renvoyer JSON):
-      // fetch('/api/status').then(r=>r.json()).then(data=>{ document.getElementById('server-status').textContent = data.online? 'En ligne': 'Hors-ligne'; ... })
+// click handlers that redirect to login page if not logged
+function guardOrRedirect(target){
+  if(localStorage.getItem('cp_user')) { showNotify('Redirection vers ' + target + ' — simulation'); /* open real page when implemented */ }
+  else window.location.href = "${loginPage}";
+}
 
-    })();
-  </script>
+// initial click handlers
+function handleConnect(){ if(API_BASE) showLogin(); else window.location.href = "${loginPage}"; }
+el('btnConnect').addEventListener('click', handleConnect);
+el('goLogin').addEventListener('click', ()=> window.location.href = "${loginPage}");
+el('copyIP').addEventListener('click', ()=> { navigator.clipboard.writeText('craftpick.fr'); showNotify('IP copiée !'); });
+
+// menu buttons -> redirect to login page if not logged, otherwise simulate
+el('navHome').addEventListener('click', ()=> guardOrRedirect('Accueil'));
+el('navGames').addEventListener('click', ()=> guardOrRedirect('Mini-Jeux'));
+el('navVote').addEventListener('click', ()=> guardOrRedirect('Vote'));
+el('navShop').addEventListener('click', ()=> guardOrRedirect('Boutique'));
+
+el('btnLobby').addEventListener('click', ()=> guardOrRedirect('Lobby'));
+el('btnShop').addEventListener('click', ()=> guardOrRedirect('Boutique'));
+el('btnVote').addEventListener('click', ()=> guardOrRedirect('Vote'));
+el('btnRecruit').addEventListener('click', ()=> guardOrRedirect('Recrutement'));
+
+// init
+renderArenas(); updateStatus(); updateStats(); renderLogged();
+setInterval(updateStatus,7000); setInterval(updateStats,15000);
+</script>
 </body>
 </html>
