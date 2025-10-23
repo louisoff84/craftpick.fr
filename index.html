@@ -1,213 +1,135 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Craftpick Network - Serveur Minecraft 1.8.8</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Craftpick Network - Serveur Minecraft 1.8.8</title>
+<style>
+/* ====== Reset & Base ====== */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;min-height:100vh;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+/* ====== Navigation ====== */
+nav{background:rgba(0,0,0,0.35);backdrop-filter:blur(10px);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1000;box-shadow:0 4px 20px rgba(0,0,0,0.2);}
+.logo{font-size:1.8rem;font-weight:bold;background:linear-gradient(45deg,#ffd700,#ffed4e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 30px rgba(255,215,0,0.5);}
+.nav-links{display:flex;gap:1rem;align-items:center;}
+.nav-links a,.nav-links button{color:#fff;text-decoration:none;padding:0.5rem 1rem;border-radius:8px;transition:all 0.3s;background:none;border:none;cursor:pointer;font-size:1rem;}
+.nav-links a:hover,.nav-links button:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
+.btn-primary{background:linear-gradient(45deg,#ff6b6b,#ee5a6f)!important;padding:0.7rem 1.5rem;font-weight:bold;}
+.btn-secondary{background:linear-gradient(45deg,#4CAF50,#45a049)!important;padding:0.7rem 1.5rem;font-weight:bold;}
 
-        /* Navigation */
-        nav {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        }
+/* ====== Hero Section ====== */
+.hero{text-align:center;padding:4rem 2rem;animation:fadeIn 1s;}
+.hero h1{font-size:3.5rem;margin-bottom:1rem;text-shadow:0 0 20px rgba(0,0,0,0.5);}
+.hero p{font-size:1.3rem;margin-bottom:2rem;opacity:0.9;}
+.server-ip{background:rgba(0,0,0,0.4);padding:1.5rem;border-radius:15px;display:inline-block;margin:2rem 0;backdrop-filter:blur(10px);}
+.server-ip h3{color:#ffd700;margin-bottom:0.5rem;}
+.ip-container{display:flex;align-items:center;gap:1rem;justify-content:center;}
+.ip-text{font-size:2rem;font-weight:bold;color:#4CAF50;}
+.copy-btn{background:#4CAF50;border:none;padding:0.8rem 1.5rem;border-radius:8px;color:white;cursor:pointer;transition:all 0.3s;font-weight:bold;}
+.copy-btn:hover{background:#45a049;transform:scale(1.05);}
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
-        }
+/* ====== Server Status ====== */
+.server-status{background:rgba(0,0,0,0.3);padding:2rem;border-radius:15px;margin:2rem auto;max-width:600px;backdrop-filter:blur(10px);}
+.status-online{color:#4CAF50;font-weight:bold;animation:pulse 2s infinite;}
+.status-offline{color:#ff6b6b;font-weight:bold;animation:pulse 2s infinite;}
+.player-count,#motd,.api-status{margin-top:0.5rem;}
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
+/* ====== NameMC Widget ====== */
+.namemc-widget{text-align:center;margin-top:2rem;}
+.namemc-widget h3{color:#ffd700;margin-bottom:1rem;}
 
-        .nav-links a, .nav-links button {
-            color: #fff;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+/* ====== Animations ====== */
+@keyframes fadeIn{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
 
-        .nav-links a:hover, .nav-links button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a6f) !important;
-            padding: 0.7rem 1.5rem !important;
-            font-weight: bold;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(45deg, #4CAF50, #45a049) !important;
-            padding: 0.7rem 1.5rem !important;
-            font-weight: bold;
-        }
-
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 4rem 2rem;
-            animation: fadeIn 1s;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .server-ip {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 1.5rem;
-            border-radius: 15px;
-            display: inline-block;
-            margin: 2rem 0;
-            backdrop-filter: blur(10px);
-        }
-
-        .server-ip h3 {
-            color: #ffd700;
-            margin-bottom: 0.5rem;
-        }
-
-        .ip-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .ip-text {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #4CAF50;
-        }
-
-        .copy-btn {
-            background: #4CAF50;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-        }
-
-        .copy-btn:hover {
-            background: #45a049;
-            transform: scale(1.05);
-        }
-
-        /* Server Status */
-        .server-status {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 2rem;
-            border-radius: 15px;
-            margin: 2rem auto;
-            max-width: 600px;
-            backdrop-filter: blur(10px);
-        }
-
-        /* NameMC Widget Section */
-        .namemc-widget {
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .namemc-widget h3 {
-            color: #ffd700;
-            margin-bottom: 1rem;
-        }
-
-        /* Animations, Responsive, etc. (inchangés) */
-        /* ... (toutes les autres règles de ton code original) ... */
-    </style>
+/* ====== Notifications ====== */
+.notification{position:fixed;top:20px;right:20px;background:rgba(0,0,0,0.9);padding:1rem 1.5rem;border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,0.3);z-index:2000;animation:slideInRight 0.3s;}
+.notification.success{border-left:4px solid #4CAF50;}
+.notification.error{border-left:4px solid #ff6b6b;}
+@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
+</style>
 </head>
 <body>
-    <nav>
-        <div class="logo">⛏️ CRAFTPICK NETWORK</div>
-        <div class="nav-links">
-            <a href="#minijeux">Mini-Jeux</a>
-            <a href="#boutique">Boutique</a>
-            <a href="#classement">Classement</a>
-            <button class="btn-secondary" onclick="window.open('https://serveur-prive.net/minecraft/craftpickv2', '_blank')">🗳️ Voter</button>
-            <button class="btn-primary" onclick="window.location.href='login-register.html'">👤 Se Connecter</button>
-            <button class="btn-primary" onclick="window.open('https://discord.gg/craftpick', '_blank')" style="background: linear-gradient(45deg, #5865F2, #4752C4) !important;">💬 Discord</button>
-        </div>
-    </nav>
-
-    <div class="hero">
-        <h1>Bienvenue sur Craftpick Network</h1>
-        <p>Le meilleur serveur Minecraft 1.8.8 - BedWars & SpeedBridge !</p>
-
-        <div class="server-ip">
-            <h3>🎮 Rejoignez-nous maintenant !</h3>
-            <div class="ip-container">
-                <span class="ip-text">craftpick.fr</span>
-                <button class="copy-btn" onclick="copyIP()">📋 Copier l'IP</button>
-            </div>
-        </div>
-
-        <div class="server-status">
-            <div id="statusIndicator" class="status-online pulse">⏳ Connexion à l'API...</div>
-            <div class="player-count" id="playerCount">- / - joueurs</div>
-            <div id="motd">Chargement...</div>
-            <div class="api-status" id="apiStatus">API: Initialisation...</div>
-        </div>
-
-        <!-- 🔹 Widget NameMC intégré proprement -->
-        <div class="namemc-widget">
-            <h3>📊 Statistiques NameMC</h3>
-            <iframe
-                style="width:728px;height:90px;max-width:100%;border:none;display:block;margin:auto"
-                src="https://fr.namemc.com/server/craftpick.fr/embed"
-                width="728"
-                height="90">
-            </iframe>
-        </div>
+<nav>
+    <div class="logo">⛏️ CRAFTPICK NETWORK</div>
+    <div class="nav-links" id="navLinks">
+        <a href="#minijeux">Mini-Jeux</a>
+        <a href="#boutique">Boutique</a>
+        <a href="#classement">Classement</a>
+        <button class="btn-secondary" onclick="window.open('https://serveur-prive.net/minecraft/craftpickv2','_blank')">🗳️ Voter</button>
+        <button class="btn-primary" id="loginBtn" onclick="window.location.href='login-register.html'">👤 Se Connecter</button>
+        <button class="btn-primary" id="logoutBtn" style="display:none;background:linear-gradient(45deg,#ff6b6b,#ee5a6f) !important;" onclick="handleLogout()">🔒 Se Déconnecter</button>
+        <button class="btn-primary" onclick="window.open('https://discord.gg/craftpick','_blank')" style="background:linear-gradient(45deg,#5865F2,#4752C4) !important;">💬 Discord</button>
     </div>
+</nav>
 
-    <!-- Le reste de ton code reste inchangé -->
+<div class="hero">
+<h1 id="welcomeMsg">Bienvenue sur Craftpick Network</h1>
+<p>Le meilleur serveur Minecraft 1.8.8 - BedWars & SpeedBridge !</p>
+
+<div class="server-ip">
+<h3>🎮 Rejoignez-nous maintenant !</h3>
+<div class="ip-container">
+<span class="ip-text" id="serverIP">craftpick.fr</span>
+<button class="copy-btn" onclick="copyIP()">📋 Copier l'IP</button>
+</div>
+</div>
+
+<div class="server-status">
+<div id="statusIndicator" class="status-online">⏳ Connexion à l'API...</div>
+<div class="player-count" id="playerCount">- / - joueurs</div>
+<div id="motd">Chargement...</div>
+<div class="api-status" id="apiStatus">API: Initialisation...</div>
+</div>
+
+<div class="namemc-widget">
+<h3>📊 Statistiques NameMC</h3>
+<iframe style="width:728px;height:90px;max-width:100%;border:none;display:block;margin:auto" src="https://fr.namemc.com/server/craftpick.fr/embed" width="728" height="90"></iframe>
+</div>
+</div>
+
+<script>
+/* ====== Copie IP ====== */
+function copyIP(){
+    const ip = document.getElementById('serverIP').textContent;
+    navigator.clipboard.writeText(ip);
+    showNotification("IP copiée !", "success");
+}
+
+/* ====== Notifications ====== */
+function showNotification(message,type='info'){
+    const notif=document.createElement('div');
+    notif.className=`notification ${type}`;
+    notif.textContent=message;
+    document.body.appendChild(notif);
+    setTimeout(()=>{notif.remove()},3000);
+}
+
+/* ====== Auth Utils ====== */
+function handleLogout(){
+    localStorage.removeItem('craftpickUser');
+    showNotification("Déconnexion réussie !", "success");
+    setTimeout(()=>{location.reload()},500);
+}
+
+/* ====== Initialisation Connexion ====== */
+document.addEventListener('DOMContentLoaded',()=>{
+    const user=JSON.parse(localStorage.getItem('craftpickUser'));
+    const loginBtn=document.getElementById('loginBtn');
+    const logoutBtn=document.getElementById('logoutBtn');
+    const welcomeMsg=document.getElementById('welcomeMsg');
+    if(user){
+        loginBtn.style.display='none';
+        logoutBtn.style.display='inline-block';
+        welcomeMsg.textContent=`Bienvenue, ${user.pseudo} !`;
+    }else{
+        loginBtn.style.display='inline-block';
+        logoutBtn.style.display='none';
+        welcomeMsg.textContent='Bienvenue sur Craftpick Network';
+    }
+});
+</script>
 </body>
 </html>
