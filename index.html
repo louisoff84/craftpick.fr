@@ -54,6 +54,7 @@
     <div class="nav-links">
         <button class="btn-secondary" onclick="window.open('https://serveur-prive.net/minecraft/craftpickv2','_blank')">🗳️ Voter / ServeurPrive</button>
         <button class="btn-primary" onclick="window.location.href='login-register.html'">👤 Se Connecter</button>
+        <button class="btn-primary" onclick="logout()">🚪 Se Déconnecter</button>
         <button class="btn-primary" onclick="window.open('https://discord.gg/craftpick','_blank')" style="background: linear-gradient(45deg,#5865F2,#4752C4) !important;">💬 Discord</button>
     </div>
 </nav>
@@ -109,6 +110,14 @@
         navigator.clipboard.writeText('craftpick.fr').then(() => {
             alert('IP copiée !');
         });
+    }
+
+    function logout() {
+        // Fonction de déconnexion simple : efface les données de session locales et redirige
+        localStorage.removeItem('userToken'); // Exemple : supprime un token fictif
+        sessionStorage.clear(); // Efface la session
+        alert('Vous avez été déconnecté.');
+        window.location.href = 'login-register.html'; // Redirige vers la page de connexion
     }
 
     // Simulation API pour modes, joueurs et leaderboard
