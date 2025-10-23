@@ -54,7 +54,7 @@
     <div class="nav-links">
         <button class="btn-secondary" onclick="window.open('https://serveur-prive.net/minecraft/craftpickv2','_blank')">🗳️ Voter / ServeurPrive</button>
         <button class="btn-primary" onclick="window.location.href='login-register.html'">👤 Se Connecter</button>
-        <button class="btn-primary" onclick="logout()">🚪 Se Déconnecter</button>
+        <button class="btn-primary" id="logoutBtn" onclick="logout()" style="display: none;">🚪 Se Déconnecter</button>
         <button class="btn-primary" onclick="window.open('https://discord.gg/craftpick','_blank')" style="background: linear-gradient(45deg,#5865F2,#4752C4) !important;">💬 Discord</button>
     </div>
 </nav>
@@ -113,15 +113,29 @@
     }
 
     function logout() {
-        // Fonction de déconnexion simple : efface les données de session locales et redirige
-        localStorage.removeItem('userToken'); // Exemple : supprime un token fictif
+        // Supprime les données de connexion
+        localStorage.removeItem('craftpickUser'); // Clé correcte utilisée dans login-register.html
         sessionStorage.clear(); // Efface la session
         alert('Vous avez été déconnecté.');
-        window.location.href = 'login-register.html'; // Redirige vers la page de connexion
+        // Recharge la page pour masquer le bouton et permettre une nouvelle connexion
+        window.location.reload();
+    }
+
+    // Vérifier l'état de connexion au chargement
+    function checkLoginStatus() {
+        const user = localStorage.getItem('craftpickUser');
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (user) {
+            logoutBtn.style.display = 'inline-block'; // Affiche le bouton si connecté
+        } else {
+            logoutBtn.style.display = 'none'; // Masque le bouton si non connecté
+        }
     }
 
     // Simulation API pour modes, joueurs et leaderboard
     document.addEventListener('DOMContentLoaded', () => {
+        checkLoginStatus(); // Vérifie l'état au chargement
+
         // Modes
         const modes = ['BedWars', 'Duels', 'SkyWars', 'SpeedBridge', 'BuildBattle'];
         document.getElementById('modesList').innerHTML = modes.map(m => '• ' + m).join('<br>');
