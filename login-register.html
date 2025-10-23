@@ -287,6 +287,29 @@
                 font-size: 1.5rem;
             }
         }
+
+        /* Style pour le bouton de déconnexion */
+        .logout-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            display: none; /* Masqué par défaut */
+        }
+
+        .btn-logout {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -294,6 +317,11 @@
         <div class="logo">
             <h1>⛏️ CRAFTPICK NETWORK</h1>
             <p>Version 1.8.8 - craftpick.fr</p>
+        </div>
+
+        <!-- Bouton de déconnexion conditionnel -->
+        <div class="logout-container" id="logoutContainer">
+            <button class="btn-logout" onclick="logout()">🚪 Se Déconnecter</button>
         </div>
 
         <div class="tabs">
@@ -423,187 +451,3 @@
         }
 
         // Afficher notification
-        function showNotification(message, type = 'info') {
-            const notif = document.createElement('div');
-            notif.className = `notification ${type}`;
-            notif.textContent = message;
-            document.body.appendChild(notif);
-
-            setTimeout(() => {
-                notif.remove();
-            }, 3000);
-        }
-
-        // Gestion de la connexion
-        function handleLogin(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            // Validation
-            if (username.length < 3) {
-                showError('loginError', 'Le pseudo doit contenir au moins 3 caractères');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('loginError', 'Le mot de passe doit contenir au moins 6 caractères');
-                return;
-            }
-
-            // Vérifier si l'utilisateur existe (simulation)
-            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
-            
-            if (!users[username]) {
-                showError('loginError', 'Ce pseudo n\'existe pas. Veuillez vous inscrire.');
-                return;
-            }
-
-            if (users[username].password !== password) {
-                showError('loginError', 'Mot de passe incorrect');
-                return;
-            }
-
-            // Connexion réussie
-            const userData = {
-                pseudo: username,
-                email: users[username].email || '',
-                loginDate: new Date().toISOString()
-            };
-
-            localStorage.setItem('craftpickUser', JSON.stringify(userData));
-            showNotification('Connexion réussie ! Redirection...', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1500);
-        }
-
-        // Gestion de l'inscription
-        function handleRegister(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('registerUsername').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const password = document.getElementById('registerPassword').value;
-            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
-
-            // Validation du pseudo
-            if (username.length < 3 || username.length > 16) {
-                showError('registerError', 'Le pseudo doit contenir entre 3 et 16 caractères');
-                return;
-            }
-
-            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-                showError('registerError', 'Le pseudo ne peut contenir que des lettres, chiffres et underscores');
-                return;
-            }
-
-            // Validation du mot de passe
-            if (password.length < 6) {
-                showError('registerError', 'Le mot de passe doit contenir au moins 6 caractères');
-                return;
-            }
-
-            if (password !== passwordConfirm) {
-                showError('registerError', 'Les mots de passe ne correspondent pas');
-                return;
-            }
-
-            // Vérifier si le pseudo existe déjà
-            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
-            
-            if (users[username]) {
-                showError('registerError', 'Ce pseudo est déjà utilisé');
-                return;
-            }
-
-            // Enregistrer l'utilisateur
-            users[username] = {
-                password: password,
-                email: email,
-                registerDate: new Date().toISOString()
-            };
-
-            localStorage.setItem('craftpickUsers', JSON.stringify(users));
-
-            // Connexion automatique
-            const userData = {
-                pseudo: username,
-                email: email,
-                loginDate: new Date().toISOString()
-            };
-
-            localStorage.setItem('craftpickUser', JSON.stringify(userData));
-
-            hideError('registerError');
-            showNotification('Inscription réussie ! Bienvenue sur Craftpick Network ! 🎉', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
-        }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', () => {
-            // Si déjà connecté, rediriger vers l'accueil
-            if (localStorage.getItem('craftpickUser')) {
-                showNotification('Vous êtes déjà connecté !', 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-            }
-        });
-
-        // Connexion avec Discord OAuth2
-        function loginWithDiscord() {
-            // Configuration OAuth2 Discord
-            const DISCORD_CONFIG = {
-                clientId: '1295800610397880392',
-                redirectUri: 'https://louisoff84.github.io/craftpick.fr/login-register.html',
-                scope: 'identify email'
-            };
-
-            // Construction de l'URL d'autorisation Discord
-            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CONFIG.clientId}&redirect_uri=${encodeURIComponent(DISCORD_CONFIG.redirectUri)}&response_type=code&scope=${encodeURIComponent(DISCORD_CONFIG.scope)}`;
-
-            showNotification('Redirection vers Discord...', 'info');
-            
-            // Redirection vers Discord
-            window.location.href = discordAuthUrl;
-        }
-
-        // Gestion du retour OAuth2 Discord
-        function handleDiscordCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-
-            if (code) {
-                // Ici vous devez échanger le code contre un token via votre backend
-                // Pour l'instant, simulation
-                showNotification('Connexion Discord réussie ! (Mode démo)', 'success');
-                
-                // Simulation de connexion
-                const userData = {
-                    pseudo: 'DiscordUser#1234',
-                    email: 'user@discord.com',
-                    loginDate: new Date().toISOString(),
-                    provider: 'discord'
-                };
-
-                localStorage.setItem('craftpickUser', JSON.stringify(userData));
-
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-            }
-        }
-
-        // Vérifier si on revient de Discord
-        if (window.location.search.includes('code=')) {
-            handleDiscordCallback();
-        }
-    </script>
-</body>
-</html>
