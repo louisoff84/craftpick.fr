@@ -1,609 +1,219 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Craftpick Network</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion - Craftpick Network</title>
+<style>
+/* ====== Reset & Base ====== */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:2rem;}
+a{color:inherit;text-decoration:none;}
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-        }
+/* ====== Container ====== */
+.auth-container{background:rgba(0,0,0,0.4);backdrop-filter:blur(20px);border-radius:20px;padding:3rem;max-width:450px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.5);animation:fadeIn 0.5s;}
+.logo{text-align:center;margin-bottom:2rem;}
+.logo h1{font-size:2rem;background:linear-gradient(45deg,#ffd700,#ffed4e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem;}
+.logo p{opacity:0.8;font-size:0.9rem;}
 
-        .auth-container {
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 3rem;
-            max-width: 450px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.5s;
-        }
+/* ====== Tabs ====== */
+.tabs{display:flex;margin-bottom:2rem;background:rgba(255,255,255,0.1);border-radius:10px;padding:0.3rem;}
+.tab{flex:1;padding:0.8rem;text-align:center;border-radius:8px;cursor:pointer;transition:all 0.3s;font-weight:bold;}
+.tab.active{background:linear-gradient(45deg,#ff6b6b,#ee5a6f);}
 
-        .logo {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+/* ====== Forms ====== */
+.form-container{display:none;}
+.form-container.active{display:block;animation:slideIn 0.3s;}
+.form-group{margin-bottom:1.5rem;}
+.form-group label{display:block;margin-bottom:0.5rem;color:#ffd700;font-weight:bold;}
+.form-group input{width:100%;padding:1rem;border:2px solid rgba(255,255,255,0.2);border-radius:10px;background:rgba(255,255,255,0.1);color:#fff;font-size:1rem;transition:all 0.3s;}
+.form-group input:focus{outline:none;border-color:#ffd700;background:rgba(255,255,255,0.15);}
+.form-group input::placeholder{color:rgba(255,255,255,0.5);}
 
-        .logo h1 {
-            font-size: 2rem;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
-        }
+.btn-submit{width:100%;padding:1rem;border:none;border-radius:10px;background:linear-gradient(45deg,#4CAF50,#45a049);color:white;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:all 0.3s;margin-top:1rem;}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(76,175,80,0.4);}
+.btn-submit:active{transform:translateY(0);}
 
-        .logo p {
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
+.btn-discord{width:100%;padding:1rem;border:none;border-radius:10px;background:linear-gradient(45deg,#5865F2,#4752C4);color:white;font-size:1.1rem;font-weight:bold;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+.btn-discord:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(88,101,242,0.4);}
+.btn-discord:active{transform:translateY(0);}
 
-        .tabs {
-            display: flex;
-            margin-bottom: 2rem;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 0.3rem;
-        }
+.back-link{text-align:center;margin-top:2rem;}
+.back-link a{color:#ffd700;text-decoration:none;font-weight:bold;transition:all 0.3s;}
+.back-link a:hover{opacity:0.8;}
 
-        .tab {
-            flex: 1;
-            padding: 0.8rem;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: bold;
-        }
+.error-message{background:rgba(255,107,107,0.3);border-left:4px solid #ff6b6b;padding:0.8rem;border-radius:8px;margin-bottom:1rem;display:none;}
+.success-message{background:rgba(76,175,80,0.3);border-left:4px solid #4CAF50;padding:0.8rem;border-radius:8px;margin-bottom:1rem;display:none;}
 
-        .tab.active {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
-        }
+/* ====== Password Strength ====== */
+.password-strength{height:4px;background:rgba(255,255,255,0.2);border-radius:2px;margin-top:0.5rem;overflow:hidden;}
+.password-strength-bar{height:100%;width:0;transition:all 0.3s;}
+.strength-weak{background:#ff6b6b;width:33%;}
+.strength-medium{background:#ffd700;width:66%;}
+.strength-strong{background:#4CAF50;width:100%;}
 
-        .form-container {
-            display: none;
-        }
+/* ====== Notifications ====== */
+.notification{position:fixed;top:20px;right:20px;background:rgba(0,0,0,0.9);padding:1rem 1.5rem;border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,0.3);z-index:2000;animation:slideInRight 0.3s;}
+.notification.success{border-left:4px solid #4CAF50;}
+.notification.error{border-left:4px solid #ff6b6b;}
 
-        .form-container.active {
-            display: block;
-            animation: slideIn 0.3s;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #ffd700;
-            font-weight: bold;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #ffd700;
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .btn-submit {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-top: 1rem;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .btn-discord {
-            width: 100%;
-            padding: 1rem;
-            border: none;
-            border-radius: 10px;
-            background: linear-gradient(45deg, #5865F2, #4752C4);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-discord:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
-        }
-
-        .btn-discord:active {
-            transform: translateY(0);
-        }
-
-        .back-link {
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .back-link a {
-            color: #ffd700;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .back-link a:hover {
-            opacity: 0.8;
-        }
-
-        .error-message {
-            background: rgba(255, 107, 107, 0.3);
-            border-left: 4px solid #ff6b6b;
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .success-message {
-            background: rgba(76, 175, 80, 0.3);
-            border-left: 4px solid #4CAF50;
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .password-strength {
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0;
-            transition: all 0.3s;
-        }
-
-        .strength-weak {
-            background: #ff6b6b;
-            width: 33%;
-        }
-
-        .strength-medium {
-            background: #ffd700;
-            width: 66%;
-        }
-
-        .strength-strong {
-            background: #4CAF50;
-            width: 100%;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.9);
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            z-index: 2000;
-            animation: slideInRight 0.3s;
-            max-width: 350px;
-        }
-
-        .notification.success {
-            border-left: 4px solid #4CAF50;
-        }
-
-        .notification.error {
-            border-left: 4px solid #ff6b6b;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-            }
-            to {
-                transform: translateX(0);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .auth-container {
-                padding: 2rem 1.5rem;
-            }
-
-            .logo h1 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+/* ====== Animations ====== */
+@keyframes fadeIn{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);}}
+@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
+</style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="logo">
-            <h1>⛏️ CRAFTPICK NETWORK</h1>
-            <p>Version 1.8.8 - craftpick.fr</p>
-        </div>
+<div class="auth-container">
+<div class="logo">
+<h1>⛏️ CRAFTPICK NETWORK</h1>
+<p>Version 1.8.8 - craftpick.fr</p>
+</div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('login')">Connexion</div>
-            <div class="tab" onclick="switchTab('register')">Inscription</div>
-        </div>
+<div class="tabs">
+<div class="tab active" onclick="switchTab('login')">Connexion</div>
+<div class="tab" onclick="switchTab('register')">Inscription</div>
+</div>
 
-        <!-- Formulaire de Connexion -->
-        <div id="loginForm" class="form-container active">
-            <div id="loginError" class="error-message"></div>
-            
-            <form onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label for="loginUsername">Pseudo</label>
-                    <input type="text" id="loginUsername" placeholder="Votre pseudo Minecraft" required>
-                </div>
+<!-- Connexion -->
+<div id="loginForm" class="form-container active">
+<div id="loginError" class="error-message"></div>
+<form onsubmit="handleLogin(event)">
+<div class="form-group">
+<label for="loginUsername">Pseudo</label>
+<input type="text" id="loginUsername" placeholder="Votre pseudo Minecraft" required>
+</div>
+<div class="form-group">
+<label for="loginPassword">Mot de passe</label>
+<input type="password" id="loginPassword" placeholder="Votre mot de passe" required>
+</div>
+<button type="submit" class="btn-submit">🎮 Se Connecter</button>
+</form>
+<div style="text-align:center;margin:1.5rem 0;opacity:0.7;">- OU -</div>
+<button class="btn-discord" onclick="loginWithDiscord()"><span style="font-size:1.2rem;">💬</span> Se connecter avec Discord</button>
+</div>
 
-                <div class="form-group">
-                    <label for="loginPassword">Mot de passe</label>
-                    <input type="password" id="loginPassword" placeholder="Votre mot de passe" required>
-                </div>
+<!-- Inscription -->
+<div id="registerForm" class="form-container">
+<div id="registerError" class="error-message"></div>
+<div id="registerSuccess" class="success-message"></div>
+<form onsubmit="handleRegister(event)">
+<div class="form-group">
+<label for="registerUsername">Pseudo</label>
+<input type="text" id="registerUsername" placeholder="Votre pseudo Minecraft" required minlength="3" maxlength="16">
+</div>
+<div class="form-group">
+<label for="registerEmail">Email (optionnel)</label>
+<input type="email" id="registerEmail" placeholder="votre@email.com">
+</div>
+<div class="form-group">
+<label for="registerPassword">Mot de passe</label>
+<input type="password" id="registerPassword" placeholder="Minimum 6 caractères" required minlength="6" oninput="checkPasswordStrength()">
+<div class="password-strength">
+<div id="strengthBar" class="password-strength-bar"></div>
+</div>
+</div>
+<div class="form-group">
+<label for="registerPasswordConfirm">Confirmer le mot de passe</label>
+<input type="password" id="registerPasswordConfirm" placeholder="Répétez votre mot de passe" required>
+</div>
+<button type="submit" class="btn-submit">✨ Créer un compte</button>
+</form>
+</div>
 
-                <button type="submit" class="btn-submit">🎮 Se Connecter</button>
-            </form>
+<div class="back-link">
+<a href="index.html">← Retour à l'accueil</a>
+</div>
+</div>
 
-            <div style="text-align: center; margin: 1.5rem 0; opacity: 0.7;">- OU -</div>
+<script>
+/* ====== Tabs ====== */
+function switchTab(tab){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.form-container').forEach(f=>f.classList.remove('active'));
+    if(tab==='login'){
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('loginForm').classList.add('active');
+    } else {
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('registerForm').classList.add('active');
+    }
+    hideError('loginError'); hideError('registerError'); hideError('registerSuccess');
+}
 
-            <button class="btn-discord" onclick="loginWithDiscord()">
-                <span style="font-size: 1.2rem;">💬</span> Se connecter avec Discord
-            </button>
-        </div>
+/* ====== Password Strength ====== */
+function checkPasswordStrength(){
+    const pwd=document.getElementById('registerPassword').value;
+    const bar=document.getElementById('strengthBar');
+    let s=0;if(pwd.length>=6)s++;if(pwd.length>=10)s++;if(/[a-z]/.test(pwd)&&/[A-Z]/.test(pwd))s++;if(/[0-9]/.test(pwd))s++;if(/[^a-zA-Z0-9]/.test(pwd))s++;
+    bar.className='password-strength-bar';
+    if(s<=2)bar.classList.add('strength-weak');
+    else if(s<=4)bar.classList.add('strength-medium');
+    else bar.classList.add('strength-strong');
+}
 
-        <!-- Formulaire d'Inscription -->
-        <div id="registerForm" class="form-container">
-            <div id="registerError" class="error-message"></div>
-            <div id="registerSuccess" class="success-message"></div>
-            
-            <form onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label for="registerUsername">Pseudo</label>
-                    <input type="text" id="registerUsername" placeholder="Votre pseudo Minecraft" required minlength="3" maxlength="16">
-                </div>
+/* ====== Notifications ====== */
+function showNotification(msg,type='info'){
+    const n=document.createElement('div');
+    n.className=`notification ${type}`;
+    n.textContent=msg;
+    document.body.appendChild(n);
+    setTimeout(()=>{n.remove()},3000);
+}
 
-                <div class="form-group">
-                    <label for="registerEmail">Email (optionnel)</label>
-                    <input type="email" id="registerEmail" placeholder="votre@email.com">
-                </div>
+/* ====== Error Utils ====== */
+function showError(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block';}
+function hideError(id){const e=document.getElementById(id);e.style.display='none';}
 
-                <div class="form-group">
-                    <label for="registerPassword">Mot de passe</label>
-                    <input type="password" id="registerPassword" placeholder="Minimum 6 caractères" required minlength="6" oninput="checkPasswordStrength()">
-                    <div class="password-strength">
-                        <div id="strengthBar" class="password-strength-bar"></div>
-                    </div>
-                </div>
+/* ====== Login ====== */
+function handleLogin(e){
+    e.preventDefault();
+    const u=document.getElementById('loginUsername').value.trim();
+    const p=document.getElementById('loginPassword').value;
+    if(u.length<3){showError('loginError','Le pseudo doit contenir au moins 3 caractères');return;}
+    if(p.length<6){showError('loginError','Mot de passe doit contenir 6 caractères minimum');return;}
+    const users=JSON.parse(localStorage.getItem('craftpickUsers')||'{}');
+    if(!users[u]){showError('loginError','Ce pseudo n\'existe pas');return;}
+    if(users[u].password!==p){showError('loginError','Mot de passe incorrect');return;}
+    localStorage.setItem('craftpickUser',JSON.stringify({pseudo:u,email:users[u].email||'',loginDate:new Date().toISOString()}));
+    showNotification('Connexion réussie ! Redirection...','success');
+    setTimeout(()=>{window.location.href='index.html'},1500);
+}
 
-                <div class="form-group">
-                    <label for="registerPasswordConfirm">Confirmer le mot de passe</label>
-                    <input type="password" id="registerPasswordConfirm" placeholder="Répétez votre mot de passe" required>
-                </div>
+/* ====== Register ====== */
+function handleRegister(e){
+    e.preventDefault();
+    const u=document.getElementById('registerUsername').value.trim();
+    const em=document.getElementById('registerEmail').value.trim();
+    const p=document.getElementById('registerPassword').value;
+    const pc=document.getElementById('registerPasswordConfirm').value;
+    if(u.length<3||u.length>16){showError('registerError','Pseudo 3-16 caractères');return;}
+    if(!/^[a-zA-Z0-9_]+$/.test(u)){showError('registerError','Pseudo lettres, chiffres ou _ seulement');return;}
+    if(p.length<6){showError('registerError','Mot de passe doit contenir au moins 6 caractères');return;}
+    if(p!==pc){showError('registerError','Les mots de passe ne correspondent pas');return;}
+    const users=JSON.parse(localStorage.getItem('craftpickUsers')||'{}');
+    if(users[u]){showError('registerError','Pseudo déjà utilisé');return;}
+    users[u]={password:p,email:em,registerDate:new Date().toISOString()};
+    localStorage.setItem('craftpickUsers',JSON.stringify(users));
+    localStorage.setItem('craftpickUser',JSON.stringify({pseudo:u,email:em,loginDate:new Date().toISOString()}));
+    hideError('registerError');
+    showNotification('Inscription réussie ! Bienvenue sur Craftpick Network ! 🎉','success');
+    setTimeout(()=>{window.location.href='index.html'},2000);
+}
 
-                <button type="submit" class="btn-submit">✨ Créer un compte</button>
-            </form>
-        </div>
+/* ====== Discord OAuth2 Simulé ====== */
+function loginWithDiscord(){
+    showNotification('Redirection vers Discord...','info');
+    const userData={pseudo:'DiscordUser#1234',email:'user@discord.com',loginDate:new Date().toISOString(),provider:'discord'};
+    localStorage.setItem('craftpickUser',JSON.stringify(userData));
+    setTimeout(()=>{window.location.href='index.html'},1500);
+}
 
-        <div class="back-link">
-            <a href="index.html">← Retour à l'accueil</a>
-        </div>
-    </div>
-
-    <script>
-        // Changement d'onglet
-        function switchTab(tab) {
-            const tabs = document.querySelectorAll('.tab');
-            const forms = document.querySelectorAll('.form-container');
-
-            tabs.forEach(t => t.classList.remove('active'));
-            forms.forEach(f => f.classList.remove('active'));
-
-            if (tab === 'login') {
-                tabs[0].classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-            } else {
-                tabs[1].classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
-            }
-
-            // Réinitialiser les messages d'erreur
-            hideError('loginError');
-            hideError('registerError');
-            hideError('registerSuccess');
-        }
-
-        // Vérification force du mot de passe
-        function checkPasswordStrength() {
-            const password = document.getElementById('registerPassword').value;
-            const strengthBar = document.getElementById('strengthBar');
-
-            let strength = 0;
-            if (password.length >= 6) strength++;
-            if (password.length >= 10) strength++;
-            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^a-zA-Z0-9]/.test(password)) strength++;
-
-            strengthBar.className = 'password-strength-bar';
-            if (strength <= 2) {
-                strengthBar.classList.add('strength-weak');
-            } else if (strength <= 4) {
-                strengthBar.classList.add('strength-medium');
-            } else {
-                strengthBar.classList.add('strength-strong');
-            }
-        }
-
-        // Afficher message d'erreur
-        function showError(elementId, message) {
-            const errorDiv = document.getElementById(elementId);
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        // Masquer message d'erreur
-        function hideError(elementId) {
-            const errorDiv = document.getElementById(elementId);
-            errorDiv.style.display = 'none';
-        }
-
-        // Afficher notification
-        function showNotification(message, type = 'info') {
-            const notif = document.createElement('div');
-            notif.className = `notification ${type}`;
-            notif.textContent = message;
-            document.body.appendChild(notif);
-
-            setTimeout(() => {
-                notif.remove();
-            }, 3000);
-        }
-
-        // Gestion de la connexion
-        function handleLogin(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-
-            // Validation
-            if (username.length < 3) {
-                showError('loginError', 'Le pseudo doit contenir au moins 3 caractères');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('loginError', 'Le mot de passe doit contenir au moins 6 caractères');
-                return;
-            }
-
-            // Vérifier si l'utilisateur existe (simulation)
-            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
-            
-            if (!users[username]) {
-                showError('loginError', 'Ce pseudo n\'existe pas. Veuillez vous inscrire.');
-                return;
-            }
-
-            if (users[username].password !== password) {
-                showError('loginError', 'Mot de passe incorrect');
-                return;
-            }
-
-            // Connexion réussie
-            const userData = {
-                pseudo: username,
-                email: users[username].email || '',
-                loginDate: new Date().toISOString()
-            };
-
-            localStorage.setItem('craftpickUser', JSON.stringify(userData));
-            showNotification('Connexion réussie ! Redirection...', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 1500);
-        }
-
-        // Gestion de l'inscription
-        function handleRegister(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('registerUsername').value.trim();
-            const email = document.getElementById('registerEmail').value.trim();
-            const password = document.getElementById('registerPassword').value;
-            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
-
-            // Validation du pseudo
-            if (username.length < 3 || username.length > 16) {
-                showError('registerError', 'Le pseudo doit contenir entre 3 et 16 caractères');
-                return;
-            }
-
-            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-                showError('registerError', 'Le pseudo ne peut contenir que des lettres, chiffres et underscores');
-                return;
-            }
-
-            // Validation du mot de passe
-            if (password.length < 6) {
-                showError('registerError', 'Le mot de passe doit contenir au moins 6 caractères');
-                return;
-            }
-
-            if (password !== passwordConfirm) {
-                showError('registerError', 'Les mots de passe ne correspondent pas');
-                return;
-            }
-
-            // Vérifier si le pseudo existe déjà
-            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
-            
-            if (users[username]) {
-                showError('registerError', 'Ce pseudo est déjà utilisé');
-                return;
-            }
-
-            // Enregistrer l'utilisateur
-            users[username] = {
-                password: password,
-                email: email,
-                registerDate: new Date().toISOString()
-            };
-
-            localStorage.setItem('craftpickUsers', JSON.stringify(users));
-
-            // Connexion automatique
-            const userData = {
-                pseudo: username,
-                email: email,
-                loginDate: new Date().toISOString()
-            };
-
-            localStorage.setItem('craftpickUser', JSON.stringify(userData));
-
-            hideError('registerError');
-            showNotification('Inscription réussie ! Bienvenue sur Craftpick Network ! 🎉', 'success');
-
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 2000);
-        }
-
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', () => {
-            // Si déjà connecté, rediriger vers l'accueil
-            if (localStorage.getItem('craftpickUser')) {
-                showNotification('Vous êtes déjà connecté !', 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-            }
-        });
-
-        // Connexion avec Discord OAuth2
-        function loginWithDiscord() {
-            // Configuration OAuth2 Discord
-            const DISCORD_CONFIG = {
-                clientId: '1295800610397880392',
-                redirectUri: 'https://louisoff84.github.io/craftpick.fr/login-register.html',
-                scope: 'identify email'
-            };
-
-            // Construction de l'URL d'autorisation Discord
-            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CONFIG.clientId}&redirect_uri=${encodeURIComponent(DISCORD_CONFIG.redirectUri)}&response_type=code&scope=${encodeURIComponent(DISCORD_CONFIG.scope)}`;
-
-            showNotification('Redirection vers Discord...', 'info');
-            
-            // Redirection vers Discord
-            window.location.href = discordAuthUrl;
-        }
-
-        // Gestion du retour OAuth2 Discord
-        function handleDiscordCallback() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-
-            if (code) {
-                // Ici vous devez échanger le code contre un token via votre backend
-                // Pour l'instant, simulation
-                showNotification('Connexion Discord réussie ! (Mode démo)', 'success');
-                
-                // Simulation de connexion
-                const userData = {
-                    pseudo: 'DiscordUser#1234',
-                    email: 'user@discord.com',
-                    loginDate: new Date().toISOString(),
-                    provider: 'discord'
-                };
-
-                localStorage.setItem('craftpickUser', JSON.stringify(userData));
-
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1500);
-            }
-        }
-
-        // Vérifier si on revient de Discord
-        if (window.location.search.includes('code=')) {
-            handleDiscordCallback();
-        }
-    </script>
+/* ====== Auto redirect if logged in ====== */
+document.addEventListener('DOMContentLoaded',()=>{
+    const u=JSON.parse(localStorage.getItem('craftpickUser'));
+    if(u){showNotification('Vous êtes déjà connecté !','success');setTimeout(()=>{window.location.href='index.html'},1500);}
+});
+</script>
 </body>
 </html>
