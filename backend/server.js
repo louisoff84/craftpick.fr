@@ -9,7 +9,7 @@ app.use(express.json());
 
 const DISCORD_CONFIG = {
     clientId: '1295800610397880392',
-    clientSecret: 'aOuDz8OoSxUq22tcpE-KYi4spFoZthbw', // ✅ Sécurisé côté serveur
+    clientSecret: 'l07ZI2uslzHEGwOpngqpmdJVp0bNkr4U', // ✅ Sécurisé côté serveur
     redirectUri: 'https://louisoff84.github.io/craftpick.fr/login-register.html'
 };
 
