@@ -137,6 +137,32 @@
             transform: translateY(0);
         }
 
+        .btn-discord {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #5865F2, #4752C4);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-discord:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(88, 101, 242, 0.4);
+        }
+
+        .btn-discord:active {
+            transform: translateY(0);
+        }
+
         .back-link {
             text-align: center;
             margin-top: 2rem;
@@ -529,6 +555,55 @@
                 }, 1500);
             }
         });
+
+        // Connexion avec Discord OAuth2
+        function loginWithDiscord() {
+            // Configuration OAuth2 Discord
+            const DISCORD_CONFIG = {
+                clientId: '1295800610397880392',
+                redirectUri: 'https://louisoff84.github.io/craftpick.fr/login-register.html',
+                scope: 'identify email'
+            };
+
+            // Construction de l'URL d'autorisation Discord
+            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CONFIG.clientId}&redirect_uri=${encodeURIComponent(DISCORD_CONFIG.redirectUri)}&response_type=code&scope=${encodeURIComponent(DISCORD_CONFIG.scope)}`;
+
+            showNotification('Redirection vers Discord...', 'info');
+            
+            // Redirection vers Discord
+            window.location.href = discordAuthUrl;
+        }
+
+        // Gestion du retour OAuth2 Discord
+        function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                // Ici vous devez échanger le code contre un token via votre backend
+                // Pour l'instant, simulation
+                showNotification('Connexion Discord réussie ! (Mode démo)', 'success');
+                
+                // Simulation de connexion
+                const userData = {
+                    pseudo: 'DiscordUser#1234',
+                    email: 'user@discord.com',
+                    loginDate: new Date().toISOString(),
+                    provider: 'discord'
+                };
+
+                localStorage.setItem('craftpickUser', JSON.stringify(userData));
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+
+        // Vérifier si on revient de Discord
+        if (window.location.search.includes('code=')) {
+            handleDiscordCallback();
+        }
     </script>
 </body>
 </html>
