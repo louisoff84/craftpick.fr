@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Craftpick Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background: #121212; color: #fff; }
+        header { background: #1f1f1f; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        header h1 { font-size: 1.8rem; color: #ffd700; }
+        nav { display: flex; gap: 1rem; }
+        nav button { background: #333; border: none; padding: 0.5rem 1rem; color: #fff; border-radius: 5px; cursor: pointer; transition: all 0.3s; }
+        nav button:hover { background: #444; }
+        .container { display: flex; flex-wrap: wrap; padding: 2rem; gap: 2rem; justify-content: center; }
+        .card { background: #1f1f1f; border-radius: 15px; padding: 1.5rem; width: 300px; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: all 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .card h2 { color: #ffd700; margin-bottom: 1rem; }
+        .card button { width: 100%; padding: 0.7rem; border: none; border-radius: 8px; cursor: pointer; background: linear-gradient(45deg,#ff6b6b,#ee5a6f); color: #fff; font-weight: bold; transition: all 0.3s; }
+        .card button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,107,107,0.4); }
+
+        /* Tableau joueur */
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { padding: 0.8rem; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #222; }
+        tr:hover { background: #2a2a2a; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; align-items: center; }
+            .card { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>⛏️ Admin Panel</h1>
+    <nav>
+        <button onclick="switchSection('dashboard')">Dashboard</button>
+        <button onclick="switchSection('joueurs')">Joueurs</button>
+        <button onclick="switchSection('modes')">Modes</button>
+        <button onclick="switchSection('news')">News</button>
+        <button onclick="logout()">Se Déconnecter</button>
+    </nav>
+</header>
+
+<div class="container" id="content">
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="section">
+        <div class="card">
+            <h2>Stats Générales</h2>
+            <p>Joueurs en ligne: <span id="onlinePlayers">0</span></p>
+            <p>Total comptes: <span id="totalUsers">0</span></p>
+            <p>Ventes boutique: <span id="salesCount">0</span></p>
+            <button onclick="refreshStats()">🔄 Rafraîchir</button>
+        </div>
+        <div class="card">
+            <h2>Liens Rapides</h2>
+            <button onclick="window.open('https://serveur-prive.net/minecraft/craftpickv2','_blank')">ServeurPrivé</button>
+            <button onclick="window.open('https://discord.gg/craftpick','_blank')">Discord</button>
+        </div>
+    </div>
+
+    <!-- Joueurs -->
+    <div id="joueurs" class="section" style="display:none;">
+        <div class="card">
+            <h2>Liste des Joueurs</h2>
+            <table id="playersTable">
+                <thead>
+                    <tr>
+                        <th>Pseudo</th>
+                        <th>Email</th>
+                        <th>Date Inscription</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Joueurs seront injectés ici -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modes -->
+    <div id="modes" class="section" style="display:none;">
+        <div class="card">
+            <h2>Modes de jeu</h2>
+            <ul id="gameModes">
+                <li>BedWars</li>
+                <li>Duels</li>
+                <li>SpeedBridge</li>
+                <li>SkyWars</li>
+            </ul>
+            <button onclick="addMode()">Ajouter un Mode</button>
+        </div>
+    </div>
+
+    <!-- News -->
+    <div id="news" class="section" style="display:none;">
+        <div class="card">
+            <h2>Gestion News</h2>
+            <ul id="newsList">
+                <li>Bienvenu sur Craftpick Network !</li>
+            </ul>
+            <button onclick="addNews()">Ajouter une News</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Gestion des sections
+    function switchSection(section) {
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById(section).style.display = 'flex';
+    }
+
+    // Simulation stats
+    function refreshStats() {
+        document.getElementById('onlinePlayers').textContent = Math.floor(Math.random()*100);
+        const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
+        document.getElementById('totalUsers').textContent = Object.keys(users).length;
+        document.getElementById('salesCount').textContent = Math.floor(Math.random()*50);
+    }
+
+    // Gestion joueurs
+    function loadPlayers() {
+        const tbody = document.getElementById('playersTable').querySelector('tbody');
+        tbody.innerHTML = '';
+        const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
+        Object.keys(users).forEach(username => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${username}</td><td>${users[username].email || '-'}</td><td>${users[username].registerDate}</td>
+            <td><button onclick="banPlayer('${username}')">Ban</button></td>`;
+            tbody.appendChild(tr);
+        });
+    }
+
+    function banPlayer(username) {
+        if(confirm(`Voulez-vous vraiment bannir ${username} ?`)){
+            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
+            delete users[username];
+            localStorage.setItem('craftpickUsers', JSON.stringify(users));
+            loadPlayers();
+            alert(`${username} a été banni !`);
+        }
+    }
+
+    // Gestion modes
+    function addMode() {
+        const mode = prompt('Nom du nouveau mode de jeu:');
+        if(mode){
+            const ul = document.getElementById('gameModes');
+            const li = document.createElement('li');
+            li.textContent = mode;
+            ul.appendChild(li);
+        }
+    }
+
+    // Gestion news
+    function addNews() {
+        const news = prompt('Nouvelle news:');
+        if(news){
+            const ul = document.getElementById('newsList');
+            const li = document.createElement('li');
+            li.textContent = news;
+            ul.appendChild(li);
+        }
+    }
+
+    // Déconnexion
+    function logout() {
+        localStorage.removeItem('craftpickUser');
+        alert('Déconnecté !');
+        window.location.href = 'login-register.html';
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', () => {
+        refreshStats();
+        loadPlayers();
+    });
+</script>
+
+</body>
+</html>
