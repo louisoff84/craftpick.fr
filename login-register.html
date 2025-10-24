@@ -163,6 +163,41 @@
             transform: translateY(0);
         }
 
+        .logout-section {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .user-info {
+            background: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .user-info h3 {
+            color: #4CAF50;
+            margin-bottom: 1rem;
+        }
+
+        .btn-logout {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+        }
+
         .back-link {
             text-align: center;
             margin-top: 2rem;
@@ -287,29 +322,6 @@
                 font-size: 1.5rem;
             }
         }
-
-        /* Style pour le bouton de déconnexion */
-        .logout-container {
-            text-align: center;
-            margin-bottom: 2rem;
-            display: none; /* Masqué par défaut */
-        }
-
-        .btn-logout {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
-        }
     </style>
 </head>
 <body>
@@ -319,15 +331,25 @@
             <p>Version 1.8.8 - craftpick.fr</p>
         </div>
 
-        <!-- Bouton de déconnexion conditionnel -->
-        <div class="logout-container" id="logoutContainer">
+        <!-- Section Déconnexion (cachée par défaut) -->
+        <div id="logoutSection" class="logout-section" style="display: none;">
+            <div class="user-info">
+                <h3>✅ Vous êtes connecté</h3>
+                <p id="loggedUsername" style="font-size: 1.2rem; margin: 0.5rem 0;"></p>
+                <p id="loggedEmail" style="opacity: 0.8;"></p>
+            </div>
             <button class="btn-logout" onclick="logout()">🚪 Se Déconnecter</button>
+            <div class="back-link" style="margin-top: 1rem;">
+                <a href="index.html">← Retour à l'accueil</a>
+            </div>
         </div>
 
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('login')">Connexion</div>
-            <div class="tab" onclick="switchTab('register')">Inscription</div>
-        </div>
+        <!-- Section Login/Register (cachée si connecté) -->
+        <div id="authForms">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">Connexion</div>
+                <div class="tab" onclick="switchTab('register')">Inscription</div>
+            </div>
 
         <!-- Formulaire de Connexion -->
         <div id="loginForm" class="form-container active">
@@ -390,6 +412,7 @@
         <div class="back-link">
             <a href="index.html">← Retour à l'accueil</a>
         </div>
+        </div>
     </div>
 
     <script>
@@ -451,3 +474,204 @@
         }
 
         // Afficher notification
+        function showNotification(message, type = 'info') {
+            const notif = document.createElement('div');
+            notif.className = `notification ${type}`;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.remove();
+            }, 3000);
+        }
+
+        // Gestion de la connexion
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            // Validation
+            if (username.length < 3) {
+                showError('loginError', 'Le pseudo doit contenir au moins 3 caractères');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('loginError', 'Le mot de passe doit contenir au moins 6 caractères');
+                return;
+            }
+
+            // Vérifier si l'utilisateur existe (simulation)
+            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
+            
+            if (!users[username]) {
+                showError('loginError', 'Ce pseudo n\'existe pas. Veuillez vous inscrire.');
+                return;
+            }
+
+            if (users[username].password !== password) {
+                showError('loginError', 'Mot de passe incorrect');
+                return;
+            }
+
+            // Connexion réussie
+            const userData = {
+                pseudo: username,
+                email: users[username].email || '',
+                loginDate: new Date().toISOString()
+            };
+
+            localStorage.setItem('craftpickUser', JSON.stringify(userData));
+            showNotification('Connexion réussie ! Redirection...', 'success');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // Gestion de l'inscription
+        function handleRegister(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('registerUsername').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+
+            // Validation du pseudo
+            if (username.length < 3 || username.length > 16) {
+                showError('registerError', 'Le pseudo doit contenir entre 3 et 16 caractères');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                showError('registerError', 'Le pseudo ne peut contenir que des lettres, chiffres et underscores');
+                return;
+            }
+
+            // Validation du mot de passe
+            if (password.length < 6) {
+                showError('registerError', 'Le mot de passe doit contenir au moins 6 caractères');
+                return;
+            }
+
+            if (password !== passwordConfirm) {
+                showError('registerError', 'Les mots de passe ne correspondent pas');
+                return;
+            }
+
+            // Vérifier si le pseudo existe déjà
+            const users = JSON.parse(localStorage.getItem('craftpickUsers') || '{}');
+            
+            if (users[username]) {
+                showError('registerError', 'Ce pseudo est déjà utilisé');
+                return;
+            }
+
+            // Enregistrer l'utilisateur
+            users[username] = {
+                password: password,
+                email: email,
+                registerDate: new Date().toISOString()
+            };
+
+            localStorage.setItem('craftpickUsers', JSON.stringify(users));
+
+            // Connexion automatique
+            const userData = {
+                pseudo: username,
+                email: email,
+                loginDate: new Date().toISOString()
+            };
+
+            localStorage.setItem('craftpickUser', JSON.stringify(userData));
+
+            hideError('registerError');
+            showNotification('Inscription réussie ! Bienvenue sur Craftpick Network ! 🎉', 'success');
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            // Vérifier si déjà connecté
+            const userData = localStorage.getItem('craftpickUser');
+            
+            if (userData) {
+                // Afficher la section de déconnexion
+                const user = JSON.parse(userData);
+                document.getElementById('logoutSection').style.display = 'block';
+                document.getElementById('authForms').style.display = 'none';
+                
+                document.getElementById('loggedUsername').textContent = `👤 ${user.pseudo}`;
+                document.getElementById('loggedEmail').textContent = user.email ? `📧 ${user.email}` : '';
+            }
+        });
+
+        // Fonction de déconnexion
+        function logout() {
+            localStorage.removeItem('craftpickUser');
+            showNotification('Déconnexion réussie !', 'success');
+            
+            setTimeout(() => {
+                // Réafficher les formulaires
+                document.getElementById('logoutSection').style.display = 'none';
+                document.getElementById('authForms').style.display = 'block';
+            }, 1000);
+        }
+
+        // Connexion avec Discord OAuth2
+        function loginWithDiscord() {
+            // Configuration OAuth2 Discord
+            const DISCORD_CONFIG = {
+                clientId: '1295800610397880392',
+                redirectUri: 'https://louisoff84.github.io/craftpick.fr/login-register.html',
+                scope: 'identify email'
+            };
+
+            // Construction de l'URL d'autorisation Discord
+            const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CONFIG.clientId}&redirect_uri=${encodeURIComponent(DISCORD_CONFIG.redirectUri)}&response_type=code&scope=${encodeURIComponent(DISCORD_CONFIG.scope)}`;
+
+            showNotification('Redirection vers Discord...', 'info');
+            
+            // Redirection vers Discord
+            window.location.href = discordAuthUrl;
+        }
+
+        // Gestion du retour OAuth2 Discord
+        function handleDiscordCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+
+            if (code) {
+                // Ici vous devez échanger le code contre un token via votre backend
+                // Pour l'instant, simulation
+                showNotification('Connexion Discord réussie ! (Mode démo)', 'success');
+                
+                // Simulation de connexion
+                const userData = {
+                    pseudo: 'DiscordUser#1234',
+                    email: 'user@discord.com',
+                    loginDate: new Date().toISOString(),
+                    provider: 'discord'
+                };
+
+                localStorage.setItem('craftpickUser', JSON.stringify(userData));
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        }
+
+        // Vérifier si on revient de Discord
+        if (window.location.search.includes('code=')) {
+            handleDiscordCallback();
+        }
+    </script>
+</body>
+</html>
